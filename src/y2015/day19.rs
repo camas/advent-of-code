@@ -1,7 +1,4 @@
-use std::{
-    cmp::Ordering,
-    collections::{HashMap, HashSet},
-};
+use std::collections::{HashMap, HashSet};
 
 use crate::Exercise;
 

@@ -81,30 +81,30 @@ fn get_day(year: u32, day: u32) -> Option<ExerciseInfo> {
         (2015, 24) => Box::new(y2015::day24::Day24 {}),
         (2015, 25) => Box::new(y2015::day25::Day25 {}),
         (2017, 1) => Box::new(y2017::day1::Day1 {}),
-        // (2017, 2) => Box::new(y2017::day2::Day2 {}),
-        // (2017, 3) => Box::new(y2017::day3::Day3 {}),
-        // (2017, 4) => Box::new(y2017::day4::Day4 {}),
-        // (2017, 5) => Box::new(y2017::day5::Day5 {}),
-        // (2017, 6) => Box::new(y2017::day6::Day6 {}),
-        // (2017, 7) => Box::new(y2017::day7::Day7 {}),
-        // (2017, 8) => Box::new(y2017::day8::Day8 {}),
-        // (2017, 9) => Box::new(y2017::day9::Day9 {}),
-        // (2017, 10) => Box::new(y2017::day10::Day10 {}),
-        // (2017, 11) => Box::new(y2017::day11::Day11 {}),
-        // (2017, 12) => Box::new(y2017::day12::Day12 {}),
-        // (2017, 13) => Box::new(y2017::day13::Day13 {}),
-        // (2017, 14) => Box::new(y2017::day14::Day14 {}),
-        // (2017, 15) => Box::new(y2017::day15::Day15 {}),
-        // (2017, 16) => Box::new(y2017::day16::Day16 {}),
-        // (2017, 17) => Box::new(y2017::day17::Day17 {}),
-        // (2017, 18) => Box::new(y2017::day18::Day18 {}),
-        // (2017, 19) => Box::new(y2017::day19::Day19 {}),
-        // (2017, 20) => Box::new(y2017::day20::Day20 {}),
-        // (2017, 21) => Box::new(y2017::day21::Day21 {}),
-        // (2017, 22) => Box::new(y2017::day22::Day22 {}),
-        // (2017, 23) => Box::new(y2017::day23::Day23 {}),
-        // (2017, 24) => Box::new(y2017::day24::Day24 {}),
-        // (2017, 25) => Box::new(y2017::day25::Day25 {}),
+        (2017, 2) => Box::new(y2017::day2::Day2 {}),
+        (2017, 3) => Box::new(y2017::day3::Day3 {}),
+        (2017, 4) => Box::new(y2017::day4::Day4 {}),
+        (2017, 5) => Box::new(y2017::day5::Day5 {}),
+        (2017, 6) => Box::new(y2017::day6::Day6 {}),
+        (2017, 7) => Box::new(y2017::day7::Day7 {}),
+        (2017, 8) => Box::new(y2017::day8::Day8 {}),
+        (2017, 9) => Box::new(y2017::day9::Day9 {}),
+        (2017, 10) => Box::new(y2017::day10::Day10 {}),
+        (2017, 11) => Box::new(y2017::day11::Day11 {}),
+        (2017, 12) => Box::new(y2017::day12::Day12 {}),
+        (2017, 13) => Box::new(y2017::day13::Day13 {}),
+        (2017, 14) => Box::new(y2017::day14::Day14 {}),
+        (2017, 15) => Box::new(y2017::day15::Day15 {}),
+        (2017, 16) => Box::new(y2017::day16::Day16 {}),
+        (2017, 17) => Box::new(y2017::day17::Day17 {}),
+        (2017, 18) => Box::new(y2017::day18::Day18 {}),
+        (2017, 19) => Box::new(y2017::day19::Day19 {}),
+        (2017, 20) => Box::new(y2017::day20::Day20 {}),
+        (2017, 21) => Box::new(y2017::day21::Day21 {}),
+        (2017, 22) => Box::new(y2017::day22::Day22 {}),
+        (2017, 23) => Box::new(y2017::day23::Day23 {}),
+        (2017, 24) => Box::new(y2017::day24::Day24 {}),
+        (2017, 25) => Box::new(y2017::day25::Day25 {}),
         _ => return None,
     };
     Some(ExerciseInfo {
@@ -145,6 +145,8 @@ impl ExerciseInfo {
                 .expect("Error getting day input")
                 .text()
                 .expect("Error reading response text");
+            std::fs::create_dir_all(input_path.parent().expect("Error getting parent dir"))
+                .expect("Error creating input dir");
             std::fs::write(input_path, &input).expect("Error writing input");
             input
         });
