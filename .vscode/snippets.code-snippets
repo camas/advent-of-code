@@ -15,23 +15,13 @@
 	// 	],
 	// 	"description": "Log output to console"
 	// }
-	"Day": {
+	"Solve": {
 		"scope": "rust",
-		"prefix": "day",
+		"prefix": "solve",
 		"body": [
-			"use crate::Exercise;",
-			"",
-			"pub struct Day${1:1};",
-			"",
-			"impl Exercise for Day$1 {",
-			"    fn part1(&self, input: &str) -> String {",
-			"        todo!()",
-			"    }",
-			"",
-			"    fn part2(&self, input: &str) -> String {",
-			"        todo!()",
-			"    }",
-			"}",
+			"pub fn solve(input: &str) -> (impl ToString, impl ToString) {",
+			"    ${0}",
+			"}"
 		]
 	}
 }
