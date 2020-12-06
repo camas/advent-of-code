@@ -1,75 +1,69 @@
 use std::collections::HashMap;
 
-use crate::Exercise;
-
-pub struct Day16;
-
-impl Exercise for Day16 {
-    fn part1(&self, input: &str) -> String {
-        let sues = input
-            .lines()
-            .map(|line| Sue::from_str(line))
-            .collect::<Vec<_>>();
-        let possibles = sues
-            .iter()
-            .filter(|sue| {
-                for (key, &value) in sue.items.iter() {
-                    let is_ok = match *key {
-                        "children" => value == 3,
-                        "cats" => value == 7,
-                        "samoyeds" => value == 2,
-                        "pomeranians" => value == 3,
-                        "akitas" => value == 0,
-                        "vizslas" => value == 0,
-                        "goldfish" => value == 5,
-                        "trees" => value == 3,
-                        "cars" => value == 2,
-                        "perfumes" => value == 1,
-                        _ => unreachable!(),
-                    };
-                    if !is_ok {
-                        return false;
-                    }
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let sues = input
+        .lines()
+        .map(|line| Sue::from_str(line))
+        .collect::<Vec<_>>();
+    let possibles = sues
+        .iter()
+        .filter(|sue| {
+            for (key, &value) in sue.items.iter() {
+                let is_ok = match *key {
+                    "children" => value == 3,
+                    "cats" => value == 7,
+                    "samoyeds" => value == 2,
+                    "pomeranians" => value == 3,
+                    "akitas" => value == 0,
+                    "vizslas" => value == 0,
+                    "goldfish" => value == 5,
+                    "trees" => value == 3,
+                    "cars" => value == 2,
+                    "perfumes" => value == 1,
+                    _ => unreachable!(),
+                };
+                if !is_ok {
+                    return false;
                 }
-                true
-            })
-            .collect::<Vec<_>>();
-        assert_eq!(possibles.len(), 1);
-        possibles[0].index.to_string()
-    }
+            }
+            true
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(possibles.len(), 1);
+    let part1 = possibles[0].index;
 
-    fn part2(&self, input: &str) -> String {
-        let sues = input
-            .lines()
-            .map(|line| Sue::from_str(line))
-            .collect::<Vec<_>>();
-        let possibles = sues
-            .iter()
-            .filter(|sue| {
-                for (key, &value) in sue.items.iter() {
-                    let is_ok = match *key {
-                        "children" => value == 3,
-                        "cats" => value > 7,
-                        "samoyeds" => value == 2,
-                        "pomeranians" => value < 3,
-                        "akitas" => value == 0,
-                        "vizslas" => value == 0,
-                        "goldfish" => value < 5,
-                        "trees" => value > 3,
-                        "cars" => value == 2,
-                        "perfumes" => value == 1,
-                        _ => unreachable!(),
-                    };
-                    if !is_ok {
-                        return false;
-                    }
+    let sues = input
+        .lines()
+        .map(|line| Sue::from_str(line))
+        .collect::<Vec<_>>();
+    let possibles = sues
+        .iter()
+        .filter(|sue| {
+            for (key, &value) in sue.items.iter() {
+                let is_ok = match *key {
+                    "children" => value == 3,
+                    "cats" => value > 7,
+                    "samoyeds" => value == 2,
+                    "pomeranians" => value < 3,
+                    "akitas" => value == 0,
+                    "vizslas" => value == 0,
+                    "goldfish" => value < 5,
+                    "trees" => value > 3,
+                    "cars" => value == 2,
+                    "perfumes" => value == 1,
+                    _ => unreachable!(),
+                };
+                if !is_ok {
+                    return false;
                 }
-                true
-            })
-            .collect::<Vec<_>>();
-        assert_eq!(possibles.len(), 1);
-        possibles[0].index.to_string()
-    }
+            }
+            true
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(possibles.len(), 1);
+    let part2 = possibles[0].index;
+
+    (part1, part2)
 }
 
 struct Sue<'a> {

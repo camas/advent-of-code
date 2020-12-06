@@ -1,97 +1,84 @@
 use std::{num::ParseIntError, str::FromStr};
 
-use crate::Exercise;
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let ingredients = input
+        .lines()
+        .map(|line| line.parse().unwrap())
+        .collect::<Vec<_>>();
 
-pub struct Day15;
-
-impl Exercise for Day15 {
-    fn part1(&self, input: &str) -> String {
-        let ingredients = input
-            .lines()
-            .map(|line| line.parse().unwrap())
-            .collect::<Vec<_>>();
-
-        fn do_loop(
-            index: u32,
-            current_total: u32,
-            mut amounts: Vec<u32>,
-            ingredients: &[Ingredient],
-            ingredients_len: u32,
-        ) -> i32 {
-            if index == ingredients_len - 1 {
-                let last_amount = 100 - current_total as u32;
-                amounts.push(last_amount);
-                cookie_value(&ingredients, &amounts)
-            } else {
-                (0..(100 - current_total))
-                    .map(|amount| {
-                        let mut amounts = amounts.clone();
-                        amounts.push(amount);
-                        do_loop(
-                            index + 1,
-                            current_total + amount,
-                            amounts,
-                            ingredients,
-                            ingredients_len,
-                        )
-                    })
-                    .max()
-                    .unwrap()
-            }
+    fn do_loop(
+        index: u32,
+        current_total: u32,
+        mut amounts: Vec<u32>,
+        ingredients: &[Ingredient],
+        ingredients_len: u32,
+    ) -> i32 {
+        if index == ingredients_len - 1 {
+            let last_amount = 100 - current_total as u32;
+            amounts.push(last_amount);
+            cookie_value(&ingredients, &amounts)
+        } else {
+            (0..(100 - current_total))
+                .map(|amount| {
+                    let mut amounts = amounts.clone();
+                    amounts.push(amount);
+                    do_loop(
+                        index + 1,
+                        current_total + amount,
+                        amounts,
+                        ingredients,
+                        ingredients_len,
+                    )
+                })
+                .max()
+                .unwrap()
         }
-        let best = do_loop(0, 0, Vec::new(), &ingredients, ingredients.len() as u32);
-
-        best.to_string()
     }
+    let best = do_loop(0, 0, Vec::new(), &ingredients, ingredients.len() as u32);
+    let part1 = best;
 
-    fn part2(&self, input: &str) -> String {
-        let ingredients = input
-            .lines()
-            .map(|line| line.parse().unwrap())
-            .collect::<Vec<_>>();
-
-        fn do_loop(
-            index: u32,
-            current_calories: u32,
-            mut amounts: Vec<u32>,
-            ingredients: &[Ingredient],
-            ingredients_len: u32,
-        ) -> i32 {
-            let ingredient = &ingredients[index as usize];
-            if index == ingredients_len - 1 {
-                let last_calories = 500 - current_calories as u32;
-                if last_calories % ingredient.calories as u32 != 0 {
+    fn do_loop2(
+        index: u32,
+        current_calories: u32,
+        mut amounts: Vec<u32>,
+        ingredients: &[Ingredient],
+        ingredients_len: u32,
+    ) -> i32 {
+        let ingredient = &ingredients[index as usize];
+        if index == ingredients_len - 1 {
+            let last_calories = 500 - current_calories as u32;
+            if last_calories % ingredient.calories as u32 != 0 {
+                i32::MIN
+            } else {
+                amounts.push(last_calories / ingredient.calories as u32);
+                if amounts.iter().sum::<u32>() != 100 {
                     i32::MIN
                 } else {
-                    amounts.push(last_calories / ingredient.calories as u32);
-                    if amounts.iter().sum::<u32>() != 100 {
-                        i32::MIN
-                    } else {
-                        cookie_value(&ingredients, &amounts)
-                    }
+                    cookie_value(&ingredients, &amounts)
                 }
-            } else {
-                (0..=(500 - current_calories))
-                    .step_by(ingredient.calories as usize)
-                    .map(|calories| {
-                        let mut amounts = amounts.clone();
-                        amounts.push(calories / ingredient.calories as u32);
-                        do_loop(
-                            index + 1,
-                            current_calories + calories,
-                            amounts,
-                            ingredients,
-                            ingredients_len,
-                        )
-                    })
-                    .max()
-                    .unwrap()
             }
+        } else {
+            (0..=(500 - current_calories))
+                .step_by(ingredient.calories as usize)
+                .map(|calories| {
+                    let mut amounts = amounts.clone();
+                    amounts.push(calories / ingredient.calories as u32);
+                    do_loop2(
+                        index + 1,
+                        current_calories + calories,
+                        amounts,
+                        ingredients,
+                        ingredients_len,
+                    )
+                })
+                .max()
+                .unwrap()
         }
-        let best = do_loop(0, 0, Vec::new(), &ingredients, ingredients.len() as u32);
-
-        best.to_string()
     }
+    let best = do_loop2(0, 0, Vec::new(), &ingredients, ingredients.len() as u32);
+    let part2 = best;
+
+    (part1, part2)
 }
 
 fn cookie_value(ingredients: &[Ingredient], amounts: &[u32]) -> i32 {
@@ -142,21 +129,5 @@ impl FromStr for Ingredient {
             texture,
             calories,
         })
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test() {
-        Day15 {}.part2(
-            "Sprinkles: capacity 2, durability 0, flavor -2, texture 0, calories 3
-Butterscotch: capacity 0, durability 5, flavor -3, texture 0, calories 3
-Chocolate: capacity 0, durability 0, flavor 5, texture -1, calories 8
-Candy: capacity 0, durability -1, flavor 0, texture 5, calories 8
-",
-        );
     }
 }

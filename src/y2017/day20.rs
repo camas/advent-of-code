@@ -1,69 +1,58 @@
 use std::{ops::AddAssign, str::FromStr};
 
-use crate::Exercise;
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let mut particles = input
+        .lines()
+        .map(|line| line.parse::<Particle>().unwrap())
+        .collect::<Vec<_>>();
 
-pub struct Day20;
+    let part1 = particles
+        .iter()
+        .enumerate()
+        .min_by_key(|(_, p)| p.acceleration.square_product())
+        .unwrap()
+        .0;
 
-impl Exercise for Day20 {
-    fn part1(&self, input: &str) -> String {
-        let particles = input
-            .lines()
-            .map(|line| line.parse::<Particle>().unwrap())
-            .collect::<Vec<_>>();
-        particles
+    let mut steps_without_collision = 0;
+    loop {
+        steps_without_collision += 1;
+        if steps_without_collision > 10_000 {
+            break;
+        }
+
+        // Move all particles
+        for particle in particles.iter_mut() {
+            particle.velocity += &particle.acceleration;
+            particle.position += &particle.velocity;
+        }
+
+        // Remove particles in same space
+        let to_remove = particles
             .iter()
             .enumerate()
-            .min_by_key(|(_, p)| p.acceleration.square_product())
-            .unwrap()
-            .0
-            .to_string()
-    }
-
-    fn part2(&self, input: &str) -> String {
-        let mut particles = input
-            .lines()
-            .map(|line| line.parse::<Particle>().unwrap())
-            .collect::<Vec<_>>();
-
-        let mut steps_without_collision = 0;
-        loop {
-            steps_without_collision += 1;
-            if steps_without_collision > 10_000 {
-                break;
-            }
-
-            // Move all particles
-            for particle in particles.iter_mut() {
-                particle.velocity += &particle.acceleration;
-                particle.position += &particle.velocity;
-            }
-
-            // Remove particles in same space
-            let to_remove = particles
-                .iter()
-                .enumerate()
-                .filter(|(i, particle)| {
-                    particles.iter().enumerate().any(|(j, other)| {
-                        if *i == j {
-                            return false;
-                        }
-                        particle.position == other.position
-                    })
+            .filter(|(i, particle)| {
+                particles.iter().enumerate().any(|(j, other)| {
+                    if *i == j {
+                        return false;
+                    }
+                    particle.position == other.position
                 })
-                .map(|(i, _)| i)
-                .collect::<Vec<_>>();
-            if !to_remove.is_empty() {
-                steps_without_collision = 0;
-                particles = particles
-                    .into_iter()
-                    .enumerate()
-                    .filter(|(i, _)| !to_remove.contains(i))
-                    .map(|(_, p)| p)
-                    .collect();
-            }
+            })
+            .map(|(i, _)| i)
+            .collect::<Vec<_>>();
+        if !to_remove.is_empty() {
+            steps_without_collision = 0;
+            particles = particles
+                .into_iter()
+                .enumerate()
+                .filter(|(i, _)| !to_remove.contains(i))
+                .map(|(_, p)| p)
+                .collect();
         }
-        particles.len().to_string()
     }
+    let part2 = particles.len();
+
+    (part1, part2)
 }
 
 #[derive(Debug, PartialEq)]

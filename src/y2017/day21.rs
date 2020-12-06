@@ -1,79 +1,57 @@
 use std::{collections::HashMap, iter, str::FromStr};
 
-use crate::Exercise;
-
-pub struct Day21;
-
-impl Exercise for Day21 {
-    fn part1(&self, input: &str) -> String {
-        let mut transforms = HashMap::new();
-        for line in input.lines() {
-            let mut patterns = line.split(" => ").map(|x| x.parse::<Pattern>().unwrap());
-            let from = patterns.next().unwrap();
-            let to = patterns.next().unwrap();
-            for pattern in iter::once(from.flipped()).chain(iter::once(from)) {
-                let rotated_90 = pattern.rotated_clockwise();
-                let rotated_180 = rotated_90.rotated_clockwise();
-                let rotated_270 = rotated_180.rotated_clockwise();
-                transforms.insert(pattern, to.clone());
-                transforms.insert(rotated_90, to.clone());
-                transforms.insert(rotated_180, to.clone());
-                transforms.insert(rotated_270, to.clone());
-            }
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let mut transforms = HashMap::new();
+    for line in input.lines() {
+        let mut patterns = line.split(" => ").map(|x| x.parse::<Pattern>().unwrap());
+        let from = patterns.next().unwrap();
+        let to = patterns.next().unwrap();
+        for pattern in iter::once(from.flipped()).chain(iter::once(from)) {
+            let rotated_90 = pattern.rotated_clockwise();
+            let rotated_180 = rotated_90.rotated_clockwise();
+            let rotated_270 = rotated_180.rotated_clockwise();
+            transforms.insert(pattern, to.clone());
+            transforms.insert(rotated_90, to.clone());
+            transforms.insert(rotated_180, to.clone());
+            transforms.insert(rotated_270, to.clone());
         }
-
-        let mut grid = vec![
-            vec![false, true, false],
-            vec![false, false, true],
-            vec![true, true, true],
-        ];
-        for _ in 0..5 {
-            grid = step(grid, &transforms);
-        }
-
-        grid.iter()
-            .map(|row| {
-                row.iter()
-                    .fold(0, |acc, &curr| if curr { acc + 1 } else { acc })
-            })
-            .sum::<u32>()
-            .to_string()
     }
 
-    fn part2(&self, input: &str) -> String {
-        let mut transforms = HashMap::new();
-        for line in input.lines() {
-            let mut patterns = line.split(" => ").map(|x| x.parse::<Pattern>().unwrap());
-            let from = patterns.next().unwrap();
-            let to = patterns.next().unwrap();
-            for pattern in iter::once(from.flipped()).chain(iter::once(from)) {
-                let rotated_90 = pattern.rotated_clockwise();
-                let rotated_180 = rotated_90.rotated_clockwise();
-                let rotated_270 = rotated_180.rotated_clockwise();
-                transforms.insert(pattern, to.clone());
-                transforms.insert(rotated_90, to.clone());
-                transforms.insert(rotated_180, to.clone());
-                transforms.insert(rotated_270, to.clone());
-            }
-        }
-
-        let mut grid = vec![
-            vec![false, true, false],
-            vec![false, false, true],
-            vec![true, true, true],
-        ];
-        for _ in 0..18 {
-            grid = step(grid, &transforms);
-        }
-
-        grid.iter()
-            .map(|row| {
-                row.iter()
-                    .fold(0, |acc, &curr| if curr { acc + 1 } else { acc })
-            })
-            .sum::<u32>()
-            .to_string()
+    let mut grid = vec![
+        vec![false, true, false],
+        vec![false, false, true],
+        vec![true, true, true],
+    ];
+    for _ in 0..5 {
+        grid = step(grid, &transforms);
     }
+
+    let part1 = grid
+        .iter()
+        .map(|row| {
+            row.iter()
+                .fold(0, |acc, &curr| if curr { acc + 1 } else { acc })
+        })
+        .sum::<u32>();
+
+    let mut grid = vec![
+        vec![false, true, false],
+        vec![false, false, true],
+        vec![true, true, true],
+    ];
+    for _ in 0..18 {
+        grid = step(grid, &transforms);
+    }
+
+    let part2 = grid
+        .iter()
+        .map(|row| {
+            row.iter()
+                .fold(0, |acc, &curr| if curr { acc + 1 } else { acc })
+        })
+        .sum::<u32>();
+
+    (part1, part2)
 }
 
 fn step(grid: Vec<Vec<bool>>, transforms: &HashMap<Pattern, Pattern>) -> Vec<Vec<bool>> {

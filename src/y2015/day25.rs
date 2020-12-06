@@ -1,23 +1,15 @@
-use crate::Exercise;
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let input = input.trim().trim_start_matches(
+        "To continue, please consult the code grid in the manual.  Enter the code at row ",
+    );
+    let parts = input.split(' ').collect::<Vec<_>>();
+    let target_row = parts[0].trim_end_matches(',').parse::<u64>().unwrap();
+    let target_column = parts[2].trim_end_matches('.').parse::<u64>().unwrap();
+    const BASE_VALUE: u64 = 20151125;
+    let real_index = get_real_index(target_row, target_column);
+    let part1 = get_code(BASE_VALUE, real_index);
 
-pub struct Day25;
-
-impl Exercise for Day25 {
-    fn part1(&self, input: &str) -> String {
-        let input = input.trim().trim_start_matches(
-            "To continue, please consult the code grid in the manual.  Enter the code at row ",
-        );
-        let parts = input.split(' ').collect::<Vec<_>>();
-        let target_row = parts[0].trim_end_matches(',').parse::<u64>().unwrap();
-        let target_column = parts[2].trim_end_matches('.').parse::<u64>().unwrap();
-        const BASE_VALUE: u64 = 20151125;
-        let real_index = get_real_index(target_row, target_column);
-        get_code(BASE_VALUE, real_index).to_string()
-    }
-
-    fn part2(&self, _input: &str) -> String {
-        "Finished!".to_string()
-    }
+    (part1, "Finished!")
 }
 
 fn get_real_index(row: u64, column: u64) -> u64 {

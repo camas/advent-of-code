@@ -1,29 +1,24 @@
-use crate::Exercise;
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let lengths = input
+        .trim()
+        .split(',')
+        .map(|part| part.parse::<usize>().unwrap());
 
-pub struct Day10;
-
-impl Exercise for Day10 {
-    fn part1(&self, input: &str) -> String {
-        let lengths = input
-            .trim()
-            .split(',')
-            .map(|part| part.parse::<usize>().unwrap());
-        let mut numbers = (0..=255).collect::<Vec<_>>();
-        let mut position = 0;
-        for (skip_size, length) in lengths.enumerate() {
-            for i in 0..(length / 2) {
-                let swap_a = (position + i) % numbers.len();
-                let swap_b = (position + length - i - 1) % numbers.len();
-                numbers.swap(swap_a, swap_b);
-            }
-            position = (position + skip_size + length) % numbers.len();
+    let mut numbers = (0..=255).collect::<Vec<_>>();
+    let mut position = 0;
+    for (skip_size, length) in lengths.enumerate() {
+        for i in 0..(length / 2) {
+            let swap_a = (position + i) % numbers.len();
+            let swap_b = (position + length - i - 1) % numbers.len();
+            numbers.swap(swap_a, swap_b);
         }
-        (numbers[0] * numbers[1]).to_string()
+        position = (position + skip_size + length) % numbers.len();
     }
+    let part1 = numbers[0] * numbers[1];
 
-    fn part2(&self, input: &str) -> String {
-        str_knot_hash(input.trim())
-    }
+    let part2 = str_knot_hash(input.trim());
+
+    (part1, part2)
 }
 
 pub fn str_knot_hash(input: &str) -> String {

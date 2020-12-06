@@ -1,91 +1,85 @@
 use std::collections::{HashMap, HashSet};
 
-use crate::Exercise;
-
-pub struct Day22;
-
-impl Exercise for Day22 {
-    fn part1(&self, input: &str) -> String {
-        let mut map = parse_map(input);
-        let mut position = Position { x: 0, y: 0 };
-        let mut dir = Direction::Up;
-        let mut infections = 0_u64;
-        for _ in 0..10_000 {
-            let curr_infected = map.contains(&position);
-            dir = if curr_infected {
-                map.remove(&position);
-                dir.right_turn()
-            } else {
-                map.insert(position.clone());
-                infections += 1;
-                dir.left_turn()
-            };
-            position = match dir {
-                Direction::Up => Position {
-                    x: position.x,
-                    y: position.y - 1,
-                },
-                Direction::Down => Position {
-                    x: position.x,
-                    y: position.y + 1,
-                },
-                Direction::Left => Position {
-                    x: position.x - 1,
-                    y: position.y,
-                },
-                Direction::Right => Position {
-                    x: position.x + 1,
-                    y: position.y,
-                },
-            };
-        }
-        infections.to_string()
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let mut map = parse_map(input);
+    let mut position = Position { x: 0, y: 0 };
+    let mut dir = Direction::Up;
+    let mut infections = 0_u64;
+    for _ in 0..10_000 {
+        let curr_infected = map.contains(&position);
+        dir = if curr_infected {
+            map.remove(&position);
+            dir.right_turn()
+        } else {
+            map.insert(position.clone());
+            infections += 1;
+            dir.left_turn()
+        };
+        position = match dir {
+            Direction::Up => Position {
+                x: position.x,
+                y: position.y - 1,
+            },
+            Direction::Down => Position {
+                x: position.x,
+                y: position.y + 1,
+            },
+            Direction::Left => Position {
+                x: position.x - 1,
+                y: position.y,
+            },
+            Direction::Right => Position {
+                x: position.x + 1,
+                y: position.y,
+            },
+        };
     }
+    let part1 = infections;
 
-    fn part2(&self, input: &str) -> String {
-        let infected_map = parse_map(input);
-        let mut map = infected_map
-            .into_iter()
-            .map(|pos| (pos, NodeState::Infected))
-            .collect::<HashMap<_, _>>();
-        let mut dir = Direction::Up;
-        let mut position = Position { x: 0, y: 0 };
-        let mut infections = 0_u64;
-        for _ in 0..10_000_000 {
-            let state = map.entry(position.clone()).or_insert(NodeState::Clean);
-            dir = match state {
-                NodeState::Clean => dir.left_turn(),
-                NodeState::Weakened => dir,
-                NodeState::Infected => dir.right_turn(),
-                NodeState::Flagged => dir.reverse(),
-            };
-            let new_state = state.next();
-            if new_state == NodeState::Infected {
-                infections += 1;
-            }
-            map.insert(position.clone(), new_state);
-
-            position = match dir {
-                Direction::Up => Position {
-                    x: position.x,
-                    y: position.y - 1,
-                },
-                Direction::Down => Position {
-                    x: position.x,
-                    y: position.y + 1,
-                },
-                Direction::Left => Position {
-                    x: position.x - 1,
-                    y: position.y,
-                },
-                Direction::Right => Position {
-                    x: position.x + 1,
-                    y: position.y,
-                },
-            };
+    let infected_map = parse_map(input);
+    let mut map = infected_map
+        .into_iter()
+        .map(|pos| (pos, NodeState::Infected))
+        .collect::<HashMap<_, _>>();
+    let mut dir = Direction::Up;
+    let mut position = Position { x: 0, y: 0 };
+    let mut infections = 0_u64;
+    for _ in 0..10_000_000 {
+        let state = map.entry(position.clone()).or_insert(NodeState::Clean);
+        dir = match state {
+            NodeState::Clean => dir.left_turn(),
+            NodeState::Weakened => dir,
+            NodeState::Infected => dir.right_turn(),
+            NodeState::Flagged => dir.reverse(),
+        };
+        let new_state = state.next();
+        if new_state == NodeState::Infected {
+            infections += 1;
         }
-        infections.to_string()
+        map.insert(position.clone(), new_state);
+
+        position = match dir {
+            Direction::Up => Position {
+                x: position.x,
+                y: position.y - 1,
+            },
+            Direction::Down => Position {
+                x: position.x,
+                y: position.y + 1,
+            },
+            Direction::Left => Position {
+                x: position.x - 1,
+                y: position.y,
+            },
+            Direction::Right => Position {
+                x: position.x + 1,
+                y: position.y,
+            },
+        };
     }
+    let part2 = infections;
+
+    (part1, part2)
 }
 
 fn parse_map(input: &str) -> HashSet<Position> {

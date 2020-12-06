@@ -1,92 +1,80 @@
 use std::str::FromStr;
 
-use crate::Exercise;
-
-pub struct Day23;
-
-impl Exercise for Day23 {
-    fn part1(&self, input: &str) -> String {
-        let instructions = input
-            .lines()
-            .map(|line| line.parse().unwrap())
-            .collect::<Vec<Instruction>>();
-        let mut mul_invoked = 0_u32;
-        let mut state = State::init();
-        loop {
-            if state.pc < 0 || state.pc >= instructions.len() as i64 {
-                break;
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let instructions = input
+        .lines()
+        .map(|line| line.parse().unwrap())
+        .collect::<Vec<Instruction>>();
+    let mut mul_invoked = 0_u32;
+    let mut state = State::init();
+    loop {
+        if state.pc < 0 || state.pc >= instructions.len() as i64 {
+            break;
+        }
+        let cur_instr = &instructions[state.pc as usize];
+        match cur_instr {
+            Instruction::Set { register, value } => {
+                let value = state.get_value(value);
+                state.set_register(*register, value);
+                state.pc += 1;
             }
-            let cur_instr = &instructions[state.pc as usize];
-            match cur_instr {
-                Instruction::Set { register, value } => {
-                    let value = state.get_value(value);
-                    state.set_register(*register, value);
-                    state.pc += 1;
-                }
-                Instruction::Subtract { register, value } => {
-                    let value = state.get_value(value);
-                    let original = state.get_register(*register);
-                    state.set_register(*register, original - value);
-                    state.pc += 1;
-                }
-                Instruction::Multiply { register, value } => {
-                    let value = state.get_value(value);
-                    let original = state.get_register(*register);
-                    state.set_register(*register, original * value);
-                    state.pc += 1;
+            Instruction::Subtract { register, value } => {
+                let value = state.get_value(value);
+                let original = state.get_register(*register);
+                state.set_register(*register, original - value);
+                state.pc += 1;
+            }
+            Instruction::Multiply { register, value } => {
+                let value = state.get_value(value);
+                let original = state.get_register(*register);
+                state.set_register(*register, original * value);
+                state.pc += 1;
 
-                    mul_invoked += 1;
-                }
-                Instruction::JumpNZ { value_a, value_b } => {
-                    let value_b = state.get_value(value_b);
-                    if state.get_value(value_a) != 0 {
-                        state.pc += value_b;
-                    } else {
-                        state.pc += 1;
-                    }
+                mul_invoked += 1;
+            }
+            Instruction::JumpNZ { value_a, value_b } => {
+                let value_b = state.get_value(value_b);
+                if state.get_value(value_a) != 0 {
+                    state.pc += value_b;
+                } else {
+                    state.pc += 1;
                 }
             }
         }
-        mul_invoked.to_string()
     }
+    let part1 = mul_invoked;
 
-    fn part2(&self, input: &str) -> String {
-        let instructions = input
-            .lines()
-            .map(|line| line.parse().unwrap())
-            .collect::<Vec<Instruction>>();
+    let lower = 100
+        * match &instructions[0] {
+            Instruction::Set { value, .. } => match value {
+                Source::Constant(value) => value,
+                _ => panic!(),
+            },
+            _ => panic!(),
+        };
+    let lower = lower
+        - match &instructions[5] {
+            Instruction::Subtract { value, .. } => match value {
+                Source::Constant(value) => value,
+                _ => panic!(),
+            },
+            _ => panic!(),
+        };
+    let upper = lower
+        - match &instructions[7] {
+            Instruction::Subtract { value, .. } => match value {
+                Source::Constant(value) => value,
+                _ => panic!(),
+            },
+            _ => panic!(),
+        };
 
-        let lower = 100
-            * match &instructions[0] {
-                Instruction::Set { value, .. } => match value {
-                    Source::Constant(value) => value,
-                    _ => panic!(),
-                },
-                _ => panic!(),
-            };
-        let lower = lower
-            - match &instructions[5] {
-                Instruction::Subtract { value, .. } => match value {
-                    Source::Constant(value) => value,
-                    _ => panic!(),
-                },
-                _ => panic!(),
-            };
-        let upper = lower
-            - match &instructions[7] {
-                Instruction::Subtract { value, .. } => match value {
-                    Source::Constant(value) => value,
-                    _ => panic!(),
-                },
-                _ => panic!(),
-            };
+    let part2 = (lower..=upper)
+        .step_by(17)
+        .filter(|i| (2..=(i / 2)).any(|factor| i % factor == 0))
+        .count();
 
-        (lower..=upper)
-            .step_by(17)
-            .filter(|i| (2..=(i / 2)).any(|factor| i % factor == 0))
-            .count()
-            .to_string()
-    }
+    (part1, part2)
 }
 
 #[derive(Debug)]

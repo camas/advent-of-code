@@ -1,65 +1,56 @@
 use std::{collections::HashMap, str::FromStr};
 
-use crate::Exercise;
-
-pub struct Day7;
-
-impl Exercise for Day7 {
-    fn part1(&self, input: &str) -> String {
-        let circuit = input.parse::<Circuit>().unwrap();
-        let mut dest_map = HashMap::new();
-        for instruction in circuit.instructions.iter() {
-            let dest = match instruction {
-                Instruction::Set { dest, .. }
-                | Instruction::Not { dest, .. }
-                | Instruction::And { dest, .. }
-                | Instruction::Or { dest, .. }
-                | Instruction::LShift { dest, .. }
-                | Instruction::RShift { dest, .. } => dest,
-            };
-            dest_map.insert(dest, instruction);
-        }
-
-        let mut calculated_values = HashMap::<String, u16>::new();
-        Circuit::calc_source(
-            &Source::Wire("a".to_string()),
-            &dest_map,
-            &mut calculated_values,
-        )
-        .to_string()
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let circuit = input.parse::<Circuit>().unwrap();
+    let mut dest_map = HashMap::new();
+    for instruction in circuit.instructions.iter() {
+        let dest = match instruction {
+            Instruction::Set { dest, .. }
+            | Instruction::Not { dest, .. }
+            | Instruction::And { dest, .. }
+            | Instruction::Or { dest, .. }
+            | Instruction::LShift { dest, .. }
+            | Instruction::RShift { dest, .. } => dest,
+        };
+        dest_map.insert(dest, instruction);
     }
 
-    fn part2(&self, input: &str) -> String {
-        let circuit = input.parse::<Circuit>().unwrap();
-        let mut dest_map = HashMap::new();
-        for instruction in circuit.instructions.iter() {
-            let dest = match instruction {
-                Instruction::Set { dest, .. }
-                | Instruction::Not { dest, .. }
-                | Instruction::And { dest, .. }
-                | Instruction::Or { dest, .. }
-                | Instruction::LShift { dest, .. }
-                | Instruction::RShift { dest, .. } => dest,
-            };
-            dest_map.insert(dest, instruction);
-        }
+    let mut calculated_values = HashMap::<String, u16>::new();
+    let part1 = Circuit::calc_source(
+        &Source::Wire("a".to_string()),
+        &dest_map,
+        &mut calculated_values,
+    );
 
-        let mut calculated_values = HashMap::<String, u16>::new();
-        let a_value = Circuit::calc_source(
-            &Source::Wire("a".to_string()),
-            &dest_map,
-            &mut calculated_values,
-        );
-
-        let mut calculated_values = HashMap::<String, u16>::new();
-        calculated_values.insert("b".to_string(), a_value);
-        Circuit::calc_source(
-            &Source::Wire("a".to_string()),
-            &dest_map,
-            &mut calculated_values,
-        )
-        .to_string()
+    let mut dest_map = HashMap::new();
+    for instruction in circuit.instructions.iter() {
+        let dest = match instruction {
+            Instruction::Set { dest, .. }
+            | Instruction::Not { dest, .. }
+            | Instruction::And { dest, .. }
+            | Instruction::Or { dest, .. }
+            | Instruction::LShift { dest, .. }
+            | Instruction::RShift { dest, .. } => dest,
+        };
+        dest_map.insert(dest, instruction);
     }
+
+    let mut calculated_values = HashMap::<String, u16>::new();
+    let a_value = Circuit::calc_source(
+        &Source::Wire("a".to_string()),
+        &dest_map,
+        &mut calculated_values,
+    );
+
+    let mut calculated_values = HashMap::<String, u16>::new();
+    calculated_values.insert("b".to_string(), a_value);
+    let part2 = Circuit::calc_source(
+        &Source::Wire("a".to_string()),
+        &dest_map,
+        &mut calculated_values,
+    );
+
+    (part1, part2)
 }
 
 struct Circuit {

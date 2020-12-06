@@ -1,63 +1,50 @@
 use std::{num::ParseIntError, str::FromStr};
 
-use crate::Exercise;
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let boxes = input
+        .lines()
+        .map(|line| line.parse::<Dimensions>().unwrap())
+        .collect::<Vec<_>>();
 
-pub struct Day2 {}
-
-impl Exercise for Day2 {
-    fn part1(&self, input: &str) -> String {
-        let boxes = input
-            .lines()
-            .map(|line| line.parse::<Dimensions>().unwrap())
-            .collect::<Vec<_>>();
-
-        boxes
-            .iter()
-            .map(|b| {
-                let surface_area = b.surface_area();
-                let slack = if b.length < b.width {
-                    if b.width < b.height {
-                        b.length * b.width
-                    } else {
-                        b.length * b.height
-                    }
-                } else if b.length < b.height {
-                    b.width * b.length
+    let part_1 = boxes
+        .iter()
+        .map(|b| {
+            let surface_area = b.surface_area();
+            let slack = if b.length < b.width {
+                if b.width < b.height {
+                    b.length * b.width
                 } else {
-                    b.width * b.height
-                };
-                surface_area + slack
-            })
-            .sum::<u32>()
-            .to_string()
-    }
+                    b.length * b.height
+                }
+            } else if b.length < b.height {
+                b.width * b.length
+            } else {
+                b.width * b.height
+            };
+            surface_area + slack
+        })
+        .sum::<u32>();
 
-    fn part2(&self, input: &str) -> String {
-        let boxes = input
-            .lines()
-            .map(|line| line.parse::<Dimensions>().unwrap())
-            .collect::<Vec<_>>();
-
-        boxes
-            .iter()
-            .map(|b| {
-                let volume = b.volume();
-                let bow = if b.length < b.width {
-                    if b.width < b.height {
-                        2 * (b.length + b.width)
-                    } else {
-                        2 * (b.length + b.height)
-                    }
-                } else if b.length < b.height {
-                    2 * (b.width + b.length)
+    let part_2 = boxes
+        .iter()
+        .map(|b| {
+            let volume = b.volume();
+            let bow = if b.length < b.width {
+                if b.width < b.height {
+                    2 * (b.length + b.width)
                 } else {
-                    2 * (b.width + b.height)
-                };
-                volume + bow
-            })
-            .sum::<u32>()
-            .to_string()
-    }
+                    2 * (b.length + b.height)
+                }
+            } else if b.length < b.height {
+                2 * (b.width + b.length)
+            } else {
+                2 * (b.width + b.height)
+            };
+            volume + bow
+        })
+        .sum::<u32>();
+
+    (part_1, part_2)
 }
 
 struct Dimensions {

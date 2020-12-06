@@ -1,47 +1,40 @@
 use std::{num::ParseIntError, str::FromStr};
 
-use crate::Exercise;
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let deers = input
+        .lines()
+        .map(|line| line.parse::<Deer>().unwrap())
+        .collect::<Vec<_>>();
+    let part1 = deers
+        .iter()
+        .map(|deer| deer.distance_at(2503))
+        .max()
+        .unwrap();
 
-pub struct Day14;
-
-impl Exercise for Day14 {
-    fn part1(&self, input: &str) -> String {
-        let deers = input
-            .lines()
-            .map(|line| line.parse::<Deer>().unwrap())
-            .collect::<Vec<_>>();
-        deers
-            .iter()
-            .map(|deer| deer.distance_at(2503))
-            .max()
-            .unwrap()
-            .to_string()
-    }
-
-    fn part2(&self, input: &str) -> String {
-        let deers = input
-            .lines()
-            .map(|line| line.parse::<Deer>().unwrap())
-            .collect::<Vec<_>>();
-        let mut scores = vec![0; deers.len()];
-        for time in 1..=2503 {
-            let mut cur_best = 0;
-            let mut cur_best_deers = Vec::new();
-            for (i, deer) in deers.iter().enumerate() {
-                let dist = deer.distance_at(time);
-                match dist.cmp(&cur_best) {
-                    std::cmp::Ordering::Less => {}
-                    std::cmp::Ordering::Equal => cur_best_deers.push(i),
-                    std::cmp::Ordering::Greater => {
-                        cur_best = dist;
-                        cur_best_deers = vec![i];
-                    }
+    let deers = input
+        .lines()
+        .map(|line| line.parse::<Deer>().unwrap())
+        .collect::<Vec<_>>();
+    let mut scores = vec![0; deers.len()];
+    for time in 1..=2503 {
+        let mut cur_best = 0;
+        let mut cur_best_deers = Vec::new();
+        for (i, deer) in deers.iter().enumerate() {
+            let dist = deer.distance_at(time);
+            match dist.cmp(&cur_best) {
+                std::cmp::Ordering::Less => {}
+                std::cmp::Ordering::Equal => cur_best_deers.push(i),
+                std::cmp::Ordering::Greater => {
+                    cur_best = dist;
+                    cur_best_deers = vec![i];
                 }
             }
-            cur_best_deers.into_iter().for_each(|i| scores[i] += 1);
         }
-        scores.iter().max().unwrap().to_string()
+        cur_best_deers.into_iter().for_each(|i| scores[i] += 1);
     }
+    let part2 = *scores.iter().max().unwrap();
+
+    (part1, part2)
 }
 
 struct Deer {

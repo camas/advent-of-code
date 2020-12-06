@@ -1,45 +1,33 @@
 use std::collections::HashSet;
 
-use crate::Exercise;
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let phrases = input
+        .lines()
+        .map(|line| line.split(' ').collect::<Vec<_>>())
+        .collect::<Vec<_>>();
+    let part1 = phrases
+        .iter()
+        .filter(|phrase| {
+            let mut set = HashSet::new();
+            for p in phrase.iter() {
+                set.insert(p);
+            }
+            set.len() == phrase.len()
+        })
+        .count();
 
-pub struct Day4;
+    let part2 = phrases
+        .iter()
+        .filter(|phrase| {
+            let mut set = HashSet::new();
+            for p in phrase.iter() {
+                let mut chars = p.chars().collect::<Vec<_>>();
+                chars.sort_unstable();
+                set.insert(chars);
+            }
+            set.len() == phrase.len()
+        })
+        .count();
 
-impl Exercise for Day4 {
-    fn part1(&self, input: &str) -> String {
-        let phrases = input
-            .lines()
-            .map(|line| line.split(' ').collect::<Vec<_>>())
-            .collect::<Vec<_>>();
-        phrases
-            .iter()
-            .filter(|phrase| {
-                let mut set = HashSet::new();
-                for p in phrase.iter() {
-                    set.insert(p);
-                }
-                set.len() == phrase.len()
-            })
-            .count()
-            .to_string()
-    }
-
-    fn part2(&self, input: &str) -> String {
-        let phrases = input
-            .lines()
-            .map(|line| line.split(' ').collect::<Vec<_>>())
-            .collect::<Vec<_>>();
-        phrases
-            .iter()
-            .filter(|phrase| {
-                let mut set = HashSet::new();
-                for p in phrase.iter() {
-                    let mut chars = p.chars().collect::<Vec<_>>();
-                    chars.sort_unstable();
-                    set.insert(chars);
-                }
-                set.len() == phrase.len()
-            })
-            .count()
-            .to_string()
-    }
+    (part1, part2)
 }

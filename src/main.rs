@@ -13,11 +13,13 @@ fn main() {
     let session = session.trim();
 
     let args = std::env::args().collect::<Vec<_>>();
-    let to_run: Vec<ExerciseInfo> = match args.len() {
+    let to_run: Vec<Exercise> = match args.len() {
         2 => {
             // Run entire year
             let year = args[1].parse::<u32>().expect("Expected a numerical year");
-            (1..=25).filter_map(|day| get_day(year, day)).collect()
+            (1..=25)
+                .filter_map(|day| Exercise::new(day, year))
+                .collect()
         }
         3..=usize::MAX => {
             // Run solutions
@@ -26,7 +28,7 @@ fn main() {
                 .iter()
                 .filter_map(|day| {
                     let day = day.parse().expect("Expected a numerical day");
-                    get_day(year, day)
+                    Exercise::new(day, year)
                 })
                 .collect()
         }
@@ -53,79 +55,16 @@ fn main() {
     }
 }
 
-fn get_day(year: u32, day: u32) -> Option<ExerciseInfo> {
-    let exercise: Box<dyn Exercise> = match (year, day) {
-        (2015, 1) => Box::new(y2015::day1::Day1 {}),
-        (2015, 2) => Box::new(y2015::day2::Day2 {}),
-        (2015, 3) => Box::new(y2015::day3::Day3 {}),
-        (2015, 4) => Box::new(y2015::day4::Day4 {}),
-        (2015, 5) => Box::new(y2015::day5::Day5 {}),
-        (2015, 6) => Box::new(y2015::day6::Day6 {}),
-        (2015, 7) => Box::new(y2015::day7::Day7 {}),
-        (2015, 8) => Box::new(y2015::day8::Day8 {}),
-        (2015, 9) => Box::new(y2015::day9::Day9 {}),
-        (2015, 10) => Box::new(y2015::day10::Day10 {}),
-        (2015, 11) => Box::new(y2015::day11::Day11 {}),
-        (2015, 12) => Box::new(y2015::day12::Day12 {}),
-        (2015, 13) => Box::new(y2015::day13::Day13 {}),
-        (2015, 14) => Box::new(y2015::day14::Day14 {}),
-        (2015, 15) => Box::new(y2015::day15::Day15 {}),
-        (2015, 16) => Box::new(y2015::day16::Day16 {}),
-        (2015, 17) => Box::new(y2015::day17::Day17 {}),
-        (2015, 18) => Box::new(y2015::day18::Day18 {}),
-        (2015, 19) => Box::new(y2015::day19::Day19 {}),
-        (2015, 20) => Box::new(y2015::day20::Day20 {}),
-        (2015, 21) => Box::new(y2015::day21::Day21 {}),
-        (2015, 22) => Box::new(y2015::day22::Day22 {}),
-        (2015, 23) => Box::new(y2015::day23::Day23 {}),
-        (2015, 24) => Box::new(y2015::day24::Day24 {}),
-        (2015, 25) => Box::new(y2015::day25::Day25 {}),
-        (2017, 1) => Box::new(y2017::day1::Day1 {}),
-        (2017, 2) => Box::new(y2017::day2::Day2 {}),
-        (2017, 3) => Box::new(y2017::day3::Day3 {}),
-        (2017, 4) => Box::new(y2017::day4::Day4 {}),
-        (2017, 5) => Box::new(y2017::day5::Day5 {}),
-        (2017, 6) => Box::new(y2017::day6::Day6 {}),
-        (2017, 7) => Box::new(y2017::day7::Day7 {}),
-        (2017, 8) => Box::new(y2017::day8::Day8 {}),
-        (2017, 9) => Box::new(y2017::day9::Day9 {}),
-        (2017, 10) => Box::new(y2017::day10::Day10 {}),
-        (2017, 11) => Box::new(y2017::day11::Day11 {}),
-        (2017, 12) => Box::new(y2017::day12::Day12 {}),
-        (2017, 13) => Box::new(y2017::day13::Day13 {}),
-        (2017, 14) => Box::new(y2017::day14::Day14 {}),
-        (2017, 15) => Box::new(y2017::day15::Day15 {}),
-        (2017, 16) => Box::new(y2017::day16::Day16 {}),
-        (2017, 17) => Box::new(y2017::day17::Day17 {}),
-        (2017, 18) => Box::new(y2017::day18::Day18 {}),
-        (2017, 19) => Box::new(y2017::day19::Day19 {}),
-        (2017, 20) => Box::new(y2017::day20::Day20 {}),
-        (2017, 21) => Box::new(y2017::day21::Day21 {}),
-        (2017, 22) => Box::new(y2017::day22::Day22 {}),
-        (2017, 23) => Box::new(y2017::day23::Day23 {}),
-        (2017, 24) => Box::new(y2017::day24::Day24 {}),
-        (2017, 25) => Box::new(y2017::day25::Day25 {}),
-        _ => return None,
-    };
-    Some(ExerciseInfo {
-        year,
-        day,
-        exercise,
-    })
-}
-
-trait Exercise {
-    fn part1(&self, input: &str) -> String;
-    fn part2(&self, input: &str) -> String;
-}
-
-struct ExerciseInfo {
+struct Exercise {
     year: u32,
     day: u32,
-    exercise: Box<dyn Exercise>,
 }
 
-impl ExerciseInfo {
+impl Exercise {
+    fn new(day: u32, year: u32) -> Option<Self> {
+        Some(Self { day, year })
+    }
+
     fn run(&self, session_key: &str) {
         println!("{} Day {}", self.year, self.day);
 
@@ -150,8 +89,68 @@ impl ExerciseInfo {
             std::fs::write(input_path, &input).expect("Error writing input");
             input
         });
+        macro_rules! run {
+            ($year:ident, $day:ident) => {{
+                let results = $year::$day::solve(&input);
+                (results.0.to_string(), results.1.to_string())
+            }};
+        }
 
-        println!("Part 1: {}", self.exercise.part1(&input));
-        println!("Part 2: {}", self.exercise.part2(&input));
+        let (part_1, part_2) = match (self.year, self.day) {
+            (2015, 1) => run!(y2015, day1),
+            (2015, 2) => run!(y2015, day2),
+            (2015, 3) => run!(y2015, day3),
+            (2015, 4) => run!(y2015, day4),
+            (2015, 5) => run!(y2015, day5),
+            (2015, 6) => run!(y2015, day6),
+            (2015, 7) => run!(y2015, day7),
+            (2015, 8) => run!(y2015, day8),
+            (2015, 9) => run!(y2015, day9),
+            (2015, 10) => run!(y2015, day10),
+            (2015, 11) => run!(y2015, day11),
+            (2015, 12) => run!(y2015, day12),
+            (2015, 13) => run!(y2015, day13),
+            (2015, 14) => run!(y2015, day14),
+            (2015, 15) => run!(y2015, day15),
+            (2015, 16) => run!(y2015, day16),
+            (2015, 17) => run!(y2015, day17),
+            (2015, 18) => run!(y2015, day18),
+            (2015, 19) => run!(y2015, day19),
+            (2015, 20) => run!(y2015, day20),
+            (2015, 21) => run!(y2015, day21),
+            (2015, 22) => run!(y2015, day22),
+            (2015, 23) => run!(y2015, day23),
+            (2015, 24) => run!(y2015, day24),
+            (2015, 25) => run!(y2015, day25),
+            (2017, 1) => run!(y2017, day1),
+            (2017, 2) => run!(y2017, day2),
+            (2017, 3) => run!(y2017, day3),
+            (2017, 4) => run!(y2017, day4),
+            (2017, 5) => run!(y2017, day5),
+            (2017, 6) => run!(y2017, day6),
+            (2017, 7) => run!(y2017, day7),
+            (2017, 8) => run!(y2017, day8),
+            (2017, 9) => run!(y2017, day9),
+            (2017, 10) => run!(y2017, day10),
+            (2017, 11) => run!(y2017, day11),
+            (2017, 12) => run!(y2017, day12),
+            (2017, 13) => run!(y2017, day13),
+            (2017, 14) => run!(y2017, day14),
+            (2017, 15) => run!(y2017, day15),
+            (2017, 16) => run!(y2017, day16),
+            (2017, 17) => run!(y2017, day17),
+            (2017, 18) => run!(y2017, day18),
+            (2017, 19) => run!(y2017, day19),
+            (2017, 20) => run!(y2017, day20),
+            (2017, 21) => run!(y2017, day21),
+            (2017, 22) => run!(y2017, day22),
+            (2017, 23) => run!(y2017, day23),
+            (2017, 24) => run!(y2017, day24),
+            (2017, 25) => run!(y2017, day25),
+            _ => panic!(),
+        };
+
+        println!("Part 1: {}", part_1);
+        println!("Part 2: {}", part_2);
     }
 }

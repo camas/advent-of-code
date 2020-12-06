@@ -1,39 +1,31 @@
 use std::{convert::TryInto, str::FromStr};
 
-use crate::Exercise;
-
-pub struct Day18;
-
-impl Exercise for Day18 {
-    fn part1(&self, input: &str) -> String {
-        let mut lights = input.parse::<Lights>().unwrap();
-        for _ in 0..100 {
-            lights.step();
-        }
-        lights
-            .values
-            .iter()
-            .map(|row| row.iter().filter(|&&value| value).count())
-            .sum::<usize>()
-            .to_string()
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let mut lights = input.parse::<Lights>().unwrap();
+    for _ in 0..100 {
+        lights.step();
     }
+    let part1 = lights
+        .values
+        .iter()
+        .map(|row| row.iter().filter(|&&value| value).count())
+        .sum::<usize>();
 
-    fn part2(&self, input: &str) -> String {
-        let mut lights = input.parse::<Lights>().unwrap();
-        lights.values[0][0] = true;
-        lights.values[0][99] = true;
-        lights.values[99][0] = true;
-        lights.values[99][99] = true;
-        for _ in 0..100 {
-            lights.step_stuck();
-        }
-        lights
-            .values
-            .iter()
-            .map(|row| row.iter().filter(|&&value| value).count())
-            .sum::<usize>()
-            .to_string()
+    let mut lights = input.parse::<Lights>().unwrap();
+    lights.values[0][0] = true;
+    lights.values[0][99] = true;
+    lights.values[99][0] = true;
+    lights.values[99][99] = true;
+    for _ in 0..100 {
+        lights.step_stuck();
     }
+    let part2 = lights
+        .values
+        .iter()
+        .map(|row| row.iter().filter(|&&value| value).count())
+        .sum::<usize>();
+
+    (part1, part2)
 }
 
 struct Lights {

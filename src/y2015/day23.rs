@@ -1,22 +1,16 @@
 use std::{num::ParseIntError, str::FromStr};
 
-use crate::Exercise;
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let mut computer: Computer = input.parse().unwrap();
+    while computer.step() {}
+    let part1 = computer.state.b;
 
-pub struct Day23;
+    let mut computer: Computer = input.parse().unwrap();
+    computer.state.a = 1;
+    while computer.step() {}
+    let part2 = computer.state.b;
 
-impl Exercise for Day23 {
-    fn part1(&self, input: &str) -> String {
-        let mut computer: Computer = input.parse().unwrap();
-        while computer.step() {}
-        computer.state.b.to_string()
-    }
-
-    fn part2(&self, input: &str) -> String {
-        let mut computer: Computer = input.parse().unwrap();
-        computer.state.a = 1;
-        while computer.step() {}
-        computer.state.b.to_string()
-    }
+    (part1, part2)
 }
 
 struct Computer {

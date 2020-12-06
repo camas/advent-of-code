@@ -1,36 +1,27 @@
 use rayon::prelude::*;
 
-use crate::Exercise;
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let input = input.trim();
 
-pub struct Day4 {}
+    let part1 = (1..i32::MAX)
+        .into_par_iter()
+        .find_first(|i| {
+            let key = format!("{}{}", input, i);
+            let hash = md5_string(&key);
+            &hash[0..5] == "00000"
+        })
+        .unwrap();
 
-impl Exercise for Day4 {
-    fn part1(&self, input: &str) -> String {
-        let input = input.trim();
+    let part2 = (1..i32::MAX)
+        .into_par_iter()
+        .find_first(|i| {
+            let key = format!("{}{}", input, i);
+            let hash = md5_string(&key);
+            &hash[0..6] == "000000"
+        })
+        .unwrap();
 
-        (1..i32::MAX)
-            .into_par_iter()
-            .find_first(|i| {
-                let key = format!("{}{}", input, i);
-                let hash = md5_string(&key);
-                &hash[0..5] == "00000"
-            })
-            .unwrap()
-            .to_string()
-    }
-
-    fn part2(&self, input: &str) -> String {
-        let input = input.trim();
-        (1..i32::MAX)
-            .into_par_iter()
-            .find_first(|i| {
-                let key = format!("{}{}", input, i);
-                let hash = md5_string(&key);
-                &hash[0..6] == "000000"
-            })
-            .unwrap()
-            .to_string()
-    }
+    (part1, part2)
 }
 
 fn md5_string(data: &str) -> String {

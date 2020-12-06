@@ -1,31 +1,20 @@
-use crate::Exercise;
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let initial_digits = input
+        .trim()
+        .chars()
+        .map(|c| c as u8 - b'0')
+        .collect::<Vec<_>>();
 
-pub struct Day10;
+    let digits = do_steps(&initial_digits, 40);
+    let part1 = digits.len();
 
-impl Exercise for Day10 {
-    fn part1(&self, input: &str) -> String {
-        let digits = input
-            .trim()
-            .chars()
-            .map(|c| c as u8 - b'0')
-            .collect::<Vec<_>>();
-        let digits = do_steps(digits, 40);
-        digits.len().to_string()
-    }
-
-    fn part2(&self, input: &str) -> String {
-        let digits = input
-            .trim()
-            .chars()
-            .map(|c| c as u8 - b'0')
-            .collect::<Vec<_>>();
-        let digits = do_steps(digits, 50);
-        digits.len().to_string()
-    }
+    let digits = do_steps(&initial_digits, 50);
+    let part2 = digits.len();
+    (part1, part2)
 }
 
-fn do_steps(initial_digits: Vec<u8>, steps: u32) -> Vec<u8> {
-    let mut digits = initial_digits;
+fn do_steps(initial_digits: &[u8], steps: u32) -> Vec<u8> {
+    let mut digits = initial_digits.to_vec();
     for _ in 0..steps {
         let mut new_digits = Vec::new();
         let mut cur_char = digits[0];

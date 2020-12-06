@@ -1,97 +1,86 @@
 use std::{collections::HashMap, collections::VecDeque, str::FromStr};
 
-use crate::Exercise;
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let instructions = input
+        .lines()
+        .map(|line| line.parse::<Instruction>().unwrap())
+        .collect::<Vec<_>>();
 
-pub struct Day18;
-
-impl Exercise for Day18 {
-    fn part1(&self, input: &str) -> String {
-        let instructions = input
-            .lines()
-            .map(|line| line.parse::<Instruction>().unwrap())
-            .collect::<Vec<_>>();
-
-        let mut registers = HashMap::new();
-        let mut pc: i64 = 0;
-        let mut last_sound = 0;
-        macro_rules! get_value {
-            ($data:expr) => {
-                match $data {
-                    Data::Value(value) => *value,
-                    Data::Register(reg) => *registers.entry(reg).or_default(),
-                }
-            };
-        }
-        loop {
-            if pc < 0 || pc >= instructions.len() as i64 {
-                break;
+    let mut registers = HashMap::new();
+    let mut pc: i64 = 0;
+    let mut last_sound = 0;
+    macro_rules! get_value {
+        ($data:expr) => {
+            match $data {
+                Data::Value(value) => *value,
+                Data::Register(reg) => *registers.entry(reg).or_default(),
             }
-
-            let instr = &instructions[pc as usize];
-            match instr {
-                Instruction::Sound(data) => last_sound = get_value!(data),
-                Instruction::Set(reg, data) => {
-                    let value = get_value!(data);
-                    registers.insert(reg, value);
-                }
-                Instruction::Add(reg, data) => {
-                    let value = get_value!(data);
-                    *registers.entry(reg).or_default() += value;
-                }
-                Instruction::Multiply(reg, data) => {
-                    let value = get_value!(data);
-                    *registers.entry(reg).or_default() *= value;
-                }
-                Instruction::Modulo(reg, data) => {
-                    let value = get_value!(data);
-                    *registers.entry(reg).or_default() %= value;
-                }
-                Instruction::Recover(reg) => {
-                    let value = *registers.entry(reg).or_default();
-                    if value != 0 {
-                        break;
-                    }
-                }
-                Instruction::JumpIfGreaterZero(..) => {}
-            }
-
-            match instr {
-                Instruction::JumpIfGreaterZero(reg, data) => {
-                    let value = get_value!(reg);
-                    if value > 0 {
-                        let jump = get_value!(data);
-                        pc += jump;
-                    } else {
-                        pc += 1;
-                    }
-                }
-                _ => pc += 1,
-            }
-        }
-        last_sound.to_string()
+        };
     }
-
-    fn part2(&self, input: &str) -> String {
-        let instructions = input
-            .lines()
-            .map(|line| line.parse::<Instruction>().unwrap())
-            .collect::<Vec<_>>();
-
-        let mut queue_0 = VecDeque::new();
-        let mut queue_1 = VecDeque::new();
-        let mut machine_0 = RunState::new(0);
-        let mut machine_1 = RunState::new(1);
-        loop {
-            machine_0.step(&instructions, &mut queue_1, &mut queue_0);
-            machine_1.step(&instructions, &mut queue_0, &mut queue_1);
-            if (machine_0.is_blocked || machine_0.is_finished)
-                && (machine_1.is_blocked || machine_1.is_finished)
-            {
-                break;
-            }
+    loop {
+        if pc < 0 || pc >= instructions.len() as i64 {
+            break;
         }
-        machine_1.send_count.to_string()
+
+        let instr = &instructions[pc as usize];
+        match instr {
+            Instruction::Sound(data) => last_sound = get_value!(data),
+            Instruction::Set(reg, data) => {
+                let value = get_value!(data);
+                registers.insert(reg, value);
+            }
+            Instruction::Add(reg, data) => {
+                let value = get_value!(data);
+                *registers.entry(reg).or_default() += value;
+            }
+            Instruction::Multiply(reg, data) => {
+                let value = get_value!(data);
+                *registers.entry(reg).or_default() *= value;
+            }
+            Instruction::Modulo(reg, data) => {
+                let value = get_value!(data);
+                *registers.entry(reg).or_default() %= value;
+            }
+            Instruction::Recover(reg) => {
+                let value = *registers.entry(reg).or_default();
+                if value != 0 {
+                    break;
+                }
+            }
+            Instruction::JumpIfGreaterZero(..) => {}
+        }
+
+        match instr {
+            Instruction::JumpIfGreaterZero(reg, data) => {
+                let value = get_value!(reg);
+                if value > 0 {
+                    let jump = get_value!(data);
+                    pc += jump;
+                } else {
+                    pc += 1;
+                }
+            }
+            _ => pc += 1,
+        }
     }
+    let part1 = last_sound;
+
+    let mut queue_0 = VecDeque::new();
+    let mut queue_1 = VecDeque::new();
+    let mut machine_0 = RunState::new(0);
+    let mut machine_1 = RunState::new(1);
+    loop {
+        machine_0.step(&instructions, &mut queue_1, &mut queue_0);
+        machine_1.step(&instructions, &mut queue_0, &mut queue_1);
+        if (machine_0.is_blocked || machine_0.is_finished)
+            && (machine_1.is_blocked || machine_1.is_finished)
+        {
+            break;
+        }
+    }
+    let part2 = machine_1.send_count;
+
+    (part1, part2)
 }
 
 struct RunState {

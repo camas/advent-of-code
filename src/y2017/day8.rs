@@ -1,70 +1,60 @@
 use std::collections::HashMap;
 
-use crate::Exercise;
-
-pub struct Day8;
-
-impl Exercise for Day8 {
-    fn part1(&self, input: &str) -> String {
-        let instructions = input
-            .lines()
-            .map(|line| Instruction::from_str(line))
-            .collect::<Vec<_>>();
-        let mut registers = HashMap::new();
-        for instruction in instructions {
-            let r = *registers.entry(instruction.condition_register).or_insert(0);
-            let val = instruction.condition_amount;
-            let condition_matched = match instruction.condition {
-                Condition::Equal => r == val,
-                Condition::NotEqual => r != val,
-                Condition::LessThan => r < val,
-                Condition::LessOrEqual => r <= val,
-                Condition::GreaterThan => r > val,
-                Condition::GreaterOrEqual => r >= val,
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let instructions = input
+        .lines()
+        .map(|line| Instruction::from_str(line))
+        .collect::<Vec<_>>();
+    let mut registers = HashMap::new();
+    for instruction in &instructions {
+        let r = *registers.entry(instruction.condition_register).or_insert(0);
+        let val = instruction.condition_amount;
+        let condition_matched = match instruction.condition {
+            Condition::Equal => r == val,
+            Condition::NotEqual => r != val,
+            Condition::LessThan => r < val,
+            Condition::LessOrEqual => r <= val,
+            Condition::GreaterThan => r > val,
+            Condition::GreaterOrEqual => r >= val,
+        };
+        if condition_matched {
+            let amount = match instruction.action {
+                Action::Inc => instruction.action_amount,
+                Action::Dec => -instruction.action_amount,
             };
-            if condition_matched {
-                let amount = match instruction.action {
-                    Action::Inc => instruction.action_amount,
-                    Action::Dec => -instruction.action_amount,
-                };
-                *registers.entry(instruction.action_register).or_insert(0) += amount;
+            *registers.entry(instruction.action_register).or_insert(0) += amount;
+        }
+    }
+    let part1 = *registers.values().max().unwrap();
+
+    let mut registers = HashMap::new();
+    let mut highest = i64::MIN;
+    for instruction in &instructions {
+        let r = *registers.entry(instruction.condition_register).or_insert(0);
+        let val = instruction.condition_amount;
+        let condition_matched = match instruction.condition {
+            Condition::Equal => r == val,
+            Condition::NotEqual => r != val,
+            Condition::LessThan => r < val,
+            Condition::LessOrEqual => r <= val,
+            Condition::GreaterThan => r > val,
+            Condition::GreaterOrEqual => r >= val,
+        };
+        if condition_matched {
+            let amount = match instruction.action {
+                Action::Inc => instruction.action_amount,
+                Action::Dec => -instruction.action_amount,
+            };
+            *registers.entry(instruction.action_register).or_insert(0) += amount;
+            let new_value = *registers.get(instruction.action_register).unwrap();
+            if new_value > highest {
+                highest = new_value;
             }
         }
-        registers.values().max().unwrap().to_string()
     }
+    let part2 = highest.to_string();
 
-    fn part2(&self, input: &str) -> String {
-        let instructions = input
-            .lines()
-            .map(|line| Instruction::from_str(line))
-            .collect::<Vec<_>>();
-        let mut registers = HashMap::new();
-        let mut highest = i64::MIN;
-        for instruction in instructions {
-            let r = *registers.entry(instruction.condition_register).or_insert(0);
-            let val = instruction.condition_amount;
-            let condition_matched = match instruction.condition {
-                Condition::Equal => r == val,
-                Condition::NotEqual => r != val,
-                Condition::LessThan => r < val,
-                Condition::LessOrEqual => r <= val,
-                Condition::GreaterThan => r > val,
-                Condition::GreaterOrEqual => r >= val,
-            };
-            if condition_matched {
-                let amount = match instruction.action {
-                    Action::Inc => instruction.action_amount,
-                    Action::Dec => -instruction.action_amount,
-                };
-                *registers.entry(instruction.action_register).or_insert(0) += amount;
-                let new_value = *registers.get(instruction.action_register).unwrap();
-                if new_value > highest {
-                    highest = new_value;
-                }
-            }
-        }
-        highest.to_string()
-    }
+    (part1, part2)
 }
 
 struct Instruction<'a> {

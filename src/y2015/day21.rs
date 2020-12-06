@@ -1,141 +1,95 @@
-use crate::Exercise;
+pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let mut lines = input.lines();
+    let hitpoints = lines
+        .next()
+        .unwrap()
+        .trim_start_matches("Hit Points: ")
+        .parse::<i32>()
+        .unwrap();
+    let damage = lines
+        .next()
+        .unwrap()
+        .trim_start_matches("Damage: ")
+        .parse::<i32>()
+        .unwrap();
+    let armor = lines
+        .next()
+        .unwrap()
+        .trim_start_matches("Armor: ")
+        .parse::<i32>()
+        .unwrap();
+    let boss = Character {
+        hitpoints,
+        damage,
+        armor,
+    };
 
-pub struct Day21;
-
-impl Exercise for Day21 {
-    fn part1(&self, input: &str) -> String {
-        let mut lines = input.lines();
-        let hitpoints = lines
-            .next()
-            .unwrap()
-            .trim_start_matches("Hit Points: ")
-            .parse::<i32>()
-            .unwrap();
-        let damage = lines
-            .next()
-            .unwrap()
-            .trim_start_matches("Damage: ")
-            .parse::<i32>()
-            .unwrap();
-        let armor = lines
-            .next()
-            .unwrap()
-            .trim_start_matches("Armor: ")
-            .parse::<i32>()
-            .unwrap();
-        let boss = Character {
-            hitpoints,
-            damage,
-            armor,
-        };
-
-        let mut armors = ARMORS.iter().map(Some).collect::<Vec<_>>();
-        armors.push(None);
-        let mut ring_combos = Vec::new();
-        let mut rings = RINGS.iter().map(Some).collect::<Vec<_>>();
-        rings.push(None);
-        for (i, ring_a) in rings.iter().enumerate() {
-            for (j, ring_b) in rings.iter().enumerate() {
-                if i == j {
-                    continue;
-                }
-                ring_combos.push((ring_a, ring_b));
+    let mut armors = ARMORS.iter().map(Some).collect::<Vec<_>>();
+    armors.push(None);
+    let mut ring_combos = Vec::new();
+    let mut rings = RINGS.iter().map(Some).collect::<Vec<_>>();
+    rings.push(None);
+    for (i, ring_a) in rings.iter().enumerate() {
+        for (j, ring_b) in rings.iter().enumerate() {
+            if i == j {
+                continue;
             }
+            ring_combos.push((ring_a, ring_b));
         }
-
-        let mut best_win = i32::MAX;
-        for weapon in WEAPONS.iter() {
-            for armor in armors.iter() {
-                for (ring_a, ring_b) in ring_combos.iter() {
-                    let mut items = vec![weapon];
-                    if let Some(ring_a) = ring_a {
-                        items.push(ring_a);
-                    }
-                    if let Some(ring_b) = ring_b {
-                        items.push(ring_b);
-                    }
-                    if let Some(armor) = armor {
-                        items.push(armor);
-                    }
-                    let player = Character::from_health_and_items(100, &items);
-                    if player.fight(&boss) {
-                        let total_cost = items.iter().map(|item| item.cost).sum();
-                        if total_cost < best_win {
-                            best_win = total_cost;
-                        }
-                    }
-                }
-            }
-        }
-        best_win.to_string()
     }
 
-    fn part2(&self, input: &str) -> String {
-        let mut lines = input.lines();
-        let hitpoints = lines
-            .next()
-            .unwrap()
-            .trim_start_matches("Hit Points: ")
-            .parse::<i32>()
-            .unwrap();
-        let damage = lines
-            .next()
-            .unwrap()
-            .trim_start_matches("Damage: ")
-            .parse::<i32>()
-            .unwrap();
-        let armor = lines
-            .next()
-            .unwrap()
-            .trim_start_matches("Armor: ")
-            .parse::<i32>()
-            .unwrap();
-        let boss = Character {
-            hitpoints,
-            damage,
-            armor,
-        };
-
-        let mut armors = ARMORS.iter().map(Some).collect::<Vec<_>>();
-        armors.push(None);
-        let mut ring_combos = Vec::new();
-        let mut rings = RINGS.iter().map(Some).collect::<Vec<_>>();
-        rings.push(None);
-        for (i, ring_a) in rings.iter().enumerate() {
-            for (j, ring_b) in rings.iter().enumerate() {
-                if i == j {
-                    continue;
+    let mut best_win = i32::MAX;
+    for weapon in WEAPONS.iter() {
+        for armor in armors.iter() {
+            for (ring_a, ring_b) in ring_combos.iter() {
+                let mut items = vec![weapon];
+                if let Some(ring_a) = ring_a {
+                    items.push(ring_a);
                 }
-                ring_combos.push((ring_a, ring_b));
-            }
-        }
-
-        let mut worst_loss = i32::MIN;
-        for weapon in WEAPONS.iter() {
-            for armor in armors.iter() {
-                for (ring_a, ring_b) in ring_combos.iter() {
-                    let mut items = vec![weapon];
-                    if let Some(ring_a) = ring_a {
-                        items.push(ring_a);
-                    }
-                    if let Some(ring_b) = ring_b {
-                        items.push(ring_b);
-                    }
-                    if let Some(armor) = armor {
-                        items.push(armor);
-                    }
-                    let player = Character::from_health_and_items(100, &items);
-                    if !player.fight(&boss) {
-                        let total_cost = items.iter().map(|item| item.cost).sum();
-                        if total_cost > worst_loss {
-                            worst_loss = total_cost;
-                        }
+                if let Some(ring_b) = ring_b {
+                    items.push(ring_b);
+                }
+                if let Some(armor) = armor {
+                    items.push(armor);
+                }
+                let player = Character::from_health_and_items(100, &items);
+                if player.fight(&boss) {
+                    let total_cost = items.iter().map(|item| item.cost).sum();
+                    if total_cost < best_win {
+                        best_win = total_cost;
                     }
                 }
             }
         }
-        worst_loss.to_string()
     }
+    let part1 = best_win;
+
+    let mut worst_loss = i32::MIN;
+    for weapon in WEAPONS.iter() {
+        for armor in armors.iter() {
+            for (ring_a, ring_b) in ring_combos.iter() {
+                let mut items = vec![weapon];
+                if let Some(ring_a) = ring_a {
+                    items.push(ring_a);
+                }
+                if let Some(ring_b) = ring_b {
+                    items.push(ring_b);
+                }
+                if let Some(armor) = armor {
+                    items.push(armor);
+                }
+                let player = Character::from_health_and_items(100, &items);
+                if !player.fight(&boss) {
+                    let total_cost = items.iter().map(|item| item.cost).sum();
+                    if total_cost > worst_loss {
+                        worst_loss = total_cost;
+                    }
+                }
+            }
+        }
+    }
+    let part2 = worst_loss;
+    (part1, part2)
 }
 
 #[derive(Debug)]
