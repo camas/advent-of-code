@@ -1,3 +1,5 @@
+use chrono::{NaiveDate, NaiveDateTime, NaiveTime, Utc};
+
 mod y2015;
 mod y2017;
 mod y2020;
@@ -68,6 +70,14 @@ impl Exercise {
 
     fn run(&self, session_key: &str) {
         println!("{} Day {}", self.year, self.day);
+        let now = Utc::now();
+        let d = NaiveDate::from_ymd(self.year as i32, 12, self.day);
+        let t = NaiveTime::from_hms(0, 0, 0);
+        let released = NaiveDateTime::new(d, t);
+        if now.naive_local() < released {
+            println!("Not released yet");
+            return;
+        }
 
         let input_path = format!("input/{}/day{}.txt", self.year, self.day);
         let input_path = std::path::Path::new(&input_path);
