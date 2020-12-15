@@ -9,38 +9,22 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         .map(|s| s.parse::<u64>().unwrap())
         .collect::<Vec<_>>();
 
-    let mut spoken = numbers.clone();
-    while spoken.len() < 2020 {
-        let last = spoken.last().unwrap();
-        let prev = spoken
-            .iter()
-            .rev()
-            .skip(1)
-            .enumerate()
-            .find(|(_, e)| *e == last);
-        let next = match prev {
-            Some((rev_offset, _)) => rev_offset + 1,
-            None => 0,
-        };
-        spoken.push(next as u64);
-    }
-    let part1 = spoken[2020 - 1];
-
-    // Instead of storing all seen numbers, only keep the last time a number was seen
-    let mut last_seen = HashMap::new();
-    for (i, n) in numbers[..(numbers.len() - 1)].iter().enumerate() {
-        last_seen.insert(*n, i as u64);
-    }
-    let mut current = *numbers.last().unwrap();
-    for time in (numbers.len() as u64 - 1)..(30000000 - 1) {
-        let new = match last_seen.get(&current) {
-            Some(value) => time - value,
-            None => 0,
-        };
-        last_seen.insert(current, time);
-        current = new;
-    }
-    let part2 = current;
+    let part1 = van_eck(&numbers, 2020);
+    let part2 = van_eck(&numbers, 30000000);
 
     (part1, part2)
+}
+
+/// Returns the nth (one-indexed) number of a van eck sequence with the given initial numbers
+fn van_eck(initial: &[u64], target: u64) -> u64 {
+    let mut seen = initial[..initial.len() - 1]
+        .iter()
+        .enumerate()
+        .map(|(i, v)| (*v, i as u64 + 1))
+        .collect::<HashMap<_, _>>();
+    ((initial.len() as u64)..target).fold(*initial.last().unwrap(), |last, time| {
+        seen.insert(last, time)
+            .map(|last_seen| time - last_seen)
+            .unwrap_or(0)
+    })
 }
