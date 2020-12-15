@@ -48,9 +48,6 @@ impl Mask {
     }
 
     fn apply2(&self, value: u64) -> Vec<u64> {
-        // println!("{:#038b}", value);
-        // println!("{:#038b}", self.one_mask);
-        // println!("{:?}", self);
         let value = value | self.one_mask;
         let mut results = Vec::new();
         for a in 0..(2_u64.pow(self.floating_offsets.len() as u32)) {
@@ -64,11 +61,6 @@ impl Mask {
             }
             results.push(result);
         }
-        // for v in results.iter() {
-        //     println!("{:#038b}", v);
-        // }
-        // println!("{:?}", results);
-        // todo!();
         results
     }
 }
