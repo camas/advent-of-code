@@ -2,6 +2,8 @@
 
 My solutions to a few of the [advent of code](https://adventofcode.com/) puzzles
 
+Session read from `.session` to automatically download inputs. Should be a 96 character string
+
 ```shell
 $ # Show help
 $ cargo run
