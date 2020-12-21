@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime, Utc};
 
 mod y2015;
@@ -93,6 +95,8 @@ impl Exercise {
                 .header("Cookie", format!("session={}", session_key))
                 .send()
                 .expect("Error getting day input")
+                .error_for_status()
+                .expect("Server returned error")
                 .text()
                 .expect("Error reading response text");
             std::fs::create_dir_all(input_path.parent().expect("Error getting parent dir"))
@@ -106,7 +110,7 @@ impl Exercise {
                 (results.0.to_string(), results.1.to_string())
             }};
         }
-
+        let before = Instant::now();
         let (part_1, part_2) = match (self.year, self.day) {
             (2015, 1) => run!(y2015, day1),
             (2015, 2) => run!(y2015, day2),
@@ -185,8 +189,10 @@ impl Exercise {
             // (2020, 25) => run!(y2020, day25),
             _ => panic!(),
         };
+        let time_diff = before.elapsed();
 
-        println!("Part 1: {}", part_1);
-        println!("Part 2: {}", part_2);
+        println!("Part 1:  {}", part_1);
+        println!("Part 2:  {}", part_2);
+        println!("Elapsed: {:?}", time_diff);
     }
 }
