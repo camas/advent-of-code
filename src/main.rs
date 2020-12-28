@@ -186,7 +186,7 @@ impl Exercise {
             (2020, 22) => run!(y2020, day22),
             (2020, 23) => run!(y2020, day23),
             (2020, 24) => run!(y2020, day24),
-            // (2020, 25) => run!(y2020, day25),
+            (2020, 25) => run!(y2020, day25),
             _ => panic!(),
         };
         let time_diff = before.elapsed();
