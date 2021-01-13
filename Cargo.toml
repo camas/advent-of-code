@@ -8,7 +8,7 @@ edition = "2018"
 
 [dependencies]
 # Http requests
-reqwest = { version = "*", features = ["blocking"] }
+ureq = "*"
 # Parallel iteration
 rayon = "*"
 # Various iter helpers

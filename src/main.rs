@@ -92,15 +92,15 @@ impl Exercise {
                 "https://adventofcode.com/{}/day/{}/input",
                 &self.year, &self.day
             );
-            let client = reqwest::blocking::Client::new();
-            let input = client
-                .get(&url)
-                .header("Cookie", format!("session={}", session_key))
-                .send()
-                .expect("Error getting day input")
-                .error_for_status()
-                .expect("Server returned error")
-                .text()
+            let input_response = ureq::get(&url)
+                .set("Cookie", &format!("session={}", session_key))
+                .call()
+                .expect("Error getting day input");
+            if input_response.status() != 200 {
+                panic!("Server returned error");
+            }
+            let input = input_response
+                .into_string()
                 .expect("Error reading response text");
             std::fs::create_dir_all(input_path.parent().expect("Error getting parent dir"))
                 .expect("Error creating input dir");
