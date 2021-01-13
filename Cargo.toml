@@ -17,3 +17,5 @@ itertools = "*"
 serde_json = "*"
 # Date/Time
 chrono = "*"
+# Number helpers
+num = "*"

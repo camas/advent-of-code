@@ -2,7 +2,9 @@ use std::time::Instant;
 
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime, Utc};
 
+mod common;
 mod y2015;
+mod y2016;
 mod y2017;
 mod y2020;
 
@@ -60,6 +62,7 @@ fn main() {
     }
 }
 
+#[derive(Debug)]
 struct Exercise {
     year: u32,
     day: u32,
@@ -104,10 +107,15 @@ impl Exercise {
             std::fs::write(input_path, &input).expect("Error writing input");
             input
         });
+
         macro_rules! run {
             ($year:ident, $day:ident) => {{
-                let results = $year::$day::solve(&input);
-                (results.0.to_string(), results.1.to_string())
+                // Hack to stop stack overflowing (but on when using `--release`)
+                #[allow(clippy::redundant_closure_call)]
+                (|| {
+                    let res = $year::$day::solve(&input);
+                    (res.0.to_string(), res.1.to_string())
+                })()
             }};
         }
         let before = Instant::now();
@@ -137,6 +145,31 @@ impl Exercise {
             (2015, 23) => run!(y2015, day23),
             (2015, 24) => run!(y2015, day24),
             (2015, 25) => run!(y2015, day25),
+            (2016, 1) => run!(y2016, day1),
+            (2016, 2) => run!(y2016, day2),
+            (2016, 3) => run!(y2016, day3),
+            (2016, 4) => run!(y2016, day4),
+            (2016, 5) => run!(y2016, day5),
+            (2016, 6) => run!(y2016, day6),
+            (2016, 7) => run!(y2016, day7),
+            (2016, 8) => run!(y2016, day8),
+            (2016, 9) => run!(y2016, day9),
+            (2016, 10) => run!(y2016, day10),
+            (2016, 11) => run!(y2016, day11),
+            (2016, 12) => run!(y2016, day12),
+            (2016, 13) => run!(y2016, day13),
+            (2016, 14) => run!(y2016, day14),
+            (2016, 15) => run!(y2016, day15),
+            (2016, 16) => run!(y2016, day16),
+            (2016, 17) => run!(y2016, day17),
+            (2016, 18) => run!(y2016, day18),
+            (2016, 19) => run!(y2016, day19),
+            (2016, 20) => run!(y2016, day20),
+            (2016, 21) => run!(y2016, day21),
+            (2016, 22) => run!(y2016, day22),
+            (2016, 23) => run!(y2016, day23),
+            (2016, 24) => run!(y2016, day24),
+            (2016, 25) => run!(y2016, day25),
             (2017, 1) => run!(y2017, day1),
             (2017, 2) => run!(y2017, day2),
             (2017, 3) => run!(y2017, day3),
