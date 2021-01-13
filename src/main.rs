@@ -110,7 +110,7 @@ impl Exercise {
 
         macro_rules! run {
             ($year:ident, $day:ident) => {{
-                // Hack to stop stack overflowing (but on when using `--release`)
+                // Hack to stop stack overflowing (but only when using `--release`)
                 #[allow(clippy::redundant_closure_call)]
                 (|| {
                     let res = $year::$day::solve(&input);
