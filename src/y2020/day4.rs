@@ -4,7 +4,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     let mut passports = Vec::new();
     let mut current = HashMap::new();
     for line in input.lines() {
-        if line == "" {
+        if line.is_empty() {
             passports.push(current);
             current = HashMap::new();
             continue;
@@ -30,15 +30,15 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         }
 
         let byr = passport["byr"].parse::<u32>().unwrap();
-        if byr < 1920 || byr > 2002 {
+        if !(1920..=2002).contains(&byr) {
             continue;
         }
         let iyr = passport["iyr"].parse::<u32>().unwrap();
-        if iyr < 2010 || iyr > 2020 {
+        if !(2010..=2020).contains(&iyr) {
             continue;
         }
         let eyr = passport["eyr"].parse::<u32>().unwrap();
-        if eyr < 2020 || eyr > 2030 {
+        if !(2020..=2030).contains(&eyr) {
             continue;
         }
         let height = passport["hgt"];
@@ -48,14 +48,14 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
             continue;
         }
         let height = height[0..height.len() - 2].parse::<u32>().unwrap();
-        if (is_cm && (height < 150 || height > 193)) || (is_in && (height < 59 || height > 76)) {
+        if (is_cm && !(150..=193).contains(&height)) || (is_in && !(59..=76).contains(&height)) {
             continue;
         }
         let hair = passport["hcl"];
         if !hair.starts_with('#')
             || !hair[1..]
                 .chars()
-                .all(|c| (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f'))
+                .all(|c| ('0'..='9').contains(&c) || ('a'..='f').contains(&c))
         {
             continue;
         }
@@ -63,7 +63,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
             continue;
         }
         let id = passport["pid"];
-        if id.chars().count() != 9 || id.chars().any(|c| c < '0' || c > '9') {
+        if id.chars().count() != 9 || id.chars().any(|c| !('0'..='9').contains(&c)) {
             continue;
         }
 

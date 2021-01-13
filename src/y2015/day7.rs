@@ -206,7 +206,7 @@ impl FromStr for Source {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let first = s.chars().next().unwrap();
-        Ok(if first >= '0' && first <= '9' {
+        Ok(if ('0'..='9').contains(&first) {
             Self::Value(s.parse().unwrap())
         } else {
             Self::Wire(s.to_string())

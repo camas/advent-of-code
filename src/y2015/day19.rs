@@ -21,7 +21,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         .replace("Y", ",");
     let total_elements = decoded
         .chars()
-        .filter(|&c| (c >= 'A' && c <= 'Z') || c == '(' || c == ')' || c == ',')
+        .filter(|&c| ('A'..='Z').contains(&c) || c == '(' || c == ')' || c == ',')
         .count();
     let bracket_count = decoded.chars().filter(|&c| c == '(' || c == ')').count();
     let comma_count = decoded.chars().filter(|&c| c == ',').count();

@@ -1,7 +1,4 @@
-use std::{
-    collections::{HashSet, VecDeque},
-    iter::FromIterator,
-};
+use std::collections::{HashSet, VecDeque};
 
 pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     let mut lines = input.lines();
@@ -23,24 +20,21 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         .map(|(i, v)| v * (i as u64 + 1))
         .sum::<u64>();
 
-    let part2 = play_recursive(
-        VecDeque::from_iter(player1.into_iter()),
-        VecDeque::from_iter(player2.into_iter()),
-    )
-    .1
-    .iter()
-    .rev()
-    .enumerate()
-    .map(|(i, v)| v * (i as u64 + 1))
-    .sum::<u64>();
+    let part2 = play_recursive(player1.into_iter().collect(), player2.into_iter().collect())
+        .1
+        .iter()
+        .rev()
+        .enumerate()
+        .map(|(i, v)| v * (i as u64 + 1))
+        .sum::<u64>();
 
     (part1, part2)
 }
 
 // Plays a game and returns the winning players deck
 fn play(player1: &[u64], player2: &[u64]) -> VecDeque<u64> {
-    let mut player1 = VecDeque::from_iter(player1.iter().cloned());
-    let mut player2 = VecDeque::from_iter(player2.iter().cloned());
+    let mut player1 = player1.iter().cloned().collect::<VecDeque<_>>();
+    let mut player2 = player2.iter().cloned().collect::<VecDeque<_>>();
 
     while !player1.is_empty() && !player2.is_empty() {
         let card1 = player1.pop_front().unwrap();
