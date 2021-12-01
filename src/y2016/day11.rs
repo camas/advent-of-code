@@ -80,8 +80,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
 
 fn moves_needed(positions: &[Pair]) -> usize {
     let initial_state = State::new(0, 0, positions.to_vec());
-    let mut queue = Vec::new();
-    queue.push(initial_state);
+    let mut queue = vec![initial_state];
     let mut seen = HashSet::new();
     loop {
         // Get state with smallest moves + heuristic

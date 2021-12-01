@@ -21,7 +21,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         let count = count_neighbours(&state);
         state = count
             .into_iter()
-            .filter(|(v, c)| *c == 3 || (*c == 2 && state.contains(&v)))
+            .filter(|(v, c)| *c == 3 || (*c == 2 && state.contains(v)))
             .map(|(v, _)| v)
             .collect::<HashSet<_>>();
     }
@@ -34,7 +34,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     for _ in 0..6 {
         state = count_neighbours4(&state)
             .into_iter()
-            .filter(|(v, c)| *c == 3 || (*c == 2 && state.contains(&v)))
+            .filter(|(v, c)| *c == 3 || (*c == 2 && state.contains(v)))
             .map(|(v, _)| v)
             .collect::<HashSet<_>>();
     }

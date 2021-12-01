@@ -46,26 +46,26 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
 
     let lower = 100
         * match &instructions[0] {
-            Instruction::Set { value, .. } => match value {
-                Source::Constant(value) => value,
-                _ => panic!(),
-            },
+            Instruction::Set {
+                value: Source::Constant(value),
+                ..
+            } => value,
             _ => panic!(),
         };
     let lower = lower
         - match &instructions[5] {
-            Instruction::Subtract { value, .. } => match value {
-                Source::Constant(value) => value,
-                _ => panic!(),
-            },
+            Instruction::Subtract {
+                value: Source::Constant(value),
+                ..
+            } => value,
             _ => panic!(),
         };
     let upper = lower
         - match &instructions[7] {
-            Instruction::Subtract { value, .. } => match value {
-                Source::Constant(value) => value,
-                _ => panic!(),
-            },
+            Instruction::Subtract {
+                value: Source::Constant(value),
+                ..
+            } => value,
             _ => panic!(),
         };
 

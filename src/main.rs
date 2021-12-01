@@ -59,7 +59,7 @@ fn main() {
     }
 
     for exercise_info in to_run {
-        exercise_info.run(&session);
+        exercise_info.run(session);
     }
 }
 

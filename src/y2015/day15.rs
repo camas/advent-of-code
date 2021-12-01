@@ -16,7 +16,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         if index == ingredients_len - 1 {
             let last_amount = 100 - current_total as u32;
             amounts.push(last_amount);
-            cookie_value(&ingredients, &amounts)
+            cookie_value(ingredients, &amounts)
         } else {
             (0..(100 - current_total))
                 .map(|amount| {
@@ -54,7 +54,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
                 if amounts.iter().sum::<u32>() != 100 {
                     i32::MIN
                 } else {
-                    cookie_value(&ingredients, &amounts)
+                    cookie_value(ingredients, &amounts)
                 }
             }
         } else {

@@ -22,10 +22,9 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     let part1 = severity;
 
     for wait in 0.. {
-        if scanners
+        if !scanners
             .iter()
-            .find(|(depth, range)| (wait + depth) % (2 * range - 2) == 0)
-            .is_none()
+            .any(|(depth, range)| (wait + depth) % (2 * range - 2) == 0)
         {
             return (part1, wait);
         }

@@ -15,10 +15,9 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     let my_row = *row_counts.iter().find(|(_, v)| v == &&7).unwrap().0;
     let my_column = (0..8)
         .find(|i| {
-            passes
+            !passes
                 .iter()
-                .find(|pass| pass.get_row() == my_row && pass.get_column() == *i)
-                .is_none()
+                .any(|pass| pass.get_row() == my_row && pass.get_column() == *i)
         })
         .unwrap();
 

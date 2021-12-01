@@ -30,7 +30,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         .par_iter()
         .map(|start| {
             let initial_state = SearchState {
-                visited: vec![&start],
+                visited: vec![start],
                 total: 0,
             };
             let mut states = vec![initial_state];
@@ -69,7 +69,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         .par_iter()
         .map(|start| {
             let initial_state = SearchState {
-                visited: vec![&start],
+                visited: vec![start],
                 total: 0,
             };
             let mut states = vec![initial_state];

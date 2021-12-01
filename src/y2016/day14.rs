@@ -37,8 +37,12 @@ fn work(salt: &str, part2: bool) -> u32 {
                             return **index;
                         }
                     }
-                    let matching = matching.into_iter().map(|(i, _)| i).collect::<Vec<_>>();
-                    for i in matching.into_iter().rev() {
+                    let to_remove = matching
+                        .into_iter()
+                        .map(|(i, _)| i)
+                        .rev()
+                        .collect::<Vec<_>>();
+                    for i in to_remove {
                         other_indexes.swap_remove(i);
                     }
                 }
