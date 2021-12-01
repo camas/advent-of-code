@@ -32,6 +32,11 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         .filter(|m| rules[&0].matches(m, &rules))
         .count();
 
+    // Return early if rule 8 doesn't exist
+    if !rules.contains_key(&8) {
+        return (part1, 0);
+    }
+
     // Change to recursive rules and count all matches
     rules.get_mut(&8).unwrap().children = ChildType::Rules(vec![vec![42], vec![42, 8]]);
     rules.get_mut(&11).unwrap().children = ChildType::Rules(vec![vec![42, 31], vec![42, 11, 31]]);
