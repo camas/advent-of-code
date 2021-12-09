@@ -4,7 +4,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     let actions = input
         .trim()
         .split(',')
-        .map(|line| Action::from_str(line))
+        .map(Action::from_str)
         .collect::<Vec<_>>();
     let mut programs = ('a'..='p').collect::<VecDeque<_>>();
     for action in actions {
@@ -22,7 +22,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     let actions = input
         .trim()
         .split(',')
-        .map(|line| Action::from_str(line))
+        .map(Action::from_str)
         .collect::<Vec<_>>();
     let mut programs = ('a'..='p').collect::<VecDeque<_>>();
     let mut seen = HashSet::new();

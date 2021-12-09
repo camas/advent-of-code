@@ -1,10 +1,7 @@
 use std::collections::HashMap;
 
 pub fn solve(input: &str) -> (impl ToString, impl ToString) {
-    let instructions = input
-        .lines()
-        .map(|line| Instruction::from_str(line))
-        .collect::<Vec<_>>();
+    let instructions = input.lines().map(Instruction::from_str).collect::<Vec<_>>();
     let mut registers = HashMap::new();
     for instruction in &instructions {
         let r = *registers.entry(instruction.condition_register).or_insert(0);

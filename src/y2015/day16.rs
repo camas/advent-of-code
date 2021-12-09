@@ -1,10 +1,7 @@
 use std::collections::HashMap;
 
 pub fn solve(input: &str) -> (impl ToString, impl ToString) {
-    let sues = input
-        .lines()
-        .map(|line| Sue::from_str(line))
-        .collect::<Vec<_>>();
+    let sues = input.lines().map(Sue::from_str).collect::<Vec<_>>();
     let possibles = sues
         .iter()
         .filter(|sue| {
@@ -32,10 +29,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     assert_eq!(possibles.len(), 1);
     let part1 = possibles[0].index;
 
-    let sues = input
-        .lines()
-        .map(|line| Sue::from_str(line))
-        .collect::<Vec<_>>();
+    let sues = input.lines().map(Sue::from_str).collect::<Vec<_>>();
     let possibles = sues
         .iter()
         .filter(|sue| {

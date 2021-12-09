@@ -50,6 +50,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
 
 #[derive(Debug)]
 struct Rule {
+    #[allow(dead_code)]
     id: usize,
     children: ChildType,
 }
