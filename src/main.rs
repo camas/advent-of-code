@@ -1,4 +1,4 @@
-use std::time::Instant;
+use std::{io::Write, time::Instant};
 
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime, Utc};
 
@@ -20,7 +20,11 @@ fn main() {
     };
     let session = session.trim();
 
-    let args = std::env::args().collect::<Vec<_>>();
+    let mut args = std::env::args().collect::<Vec<_>>();
+    if args.len() == 1 {
+        args.push(prompt("year> "));
+        args.push(prompt("day> "));
+    }
     let to_run: Vec<Exercise> = match args.len() {
         2 => {
             // Run entire year
@@ -61,6 +65,14 @@ fn main() {
     for exercise_info in to_run {
         exercise_info.run(session);
     }
+}
+
+fn prompt(text: &str) -> String {
+    print!("{}", text);
+    std::io::stdout().flush().unwrap();
+    let mut s = String::new();
+    std::io::stdin().read_line(&mut s).unwrap();
+    s.trim().to_string()
 }
 
 #[derive(Debug)]
@@ -224,7 +236,7 @@ impl Exercise {
             (2021, 1) => run!(y2021, day1),
             (2021, 2) => run!(y2021, day2),
             (2021, 3) => run!(y2021, day3),
-            // (2021, 4) => run!(y2021, day4),
+            (2021, 4) => run!(y2021, day4),
             // (2021, 5) => run!(y2021, day5),
             // (2021, 6) => run!(y2021, day6),
             // (2021, 7) => run!(y2021, day7),
