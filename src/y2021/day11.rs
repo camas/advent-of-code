@@ -117,5 +117,6 @@ mod tests {
 5283751526";
         let (part1, part2) = solve(data);
         assert_eq!(part1.to_string(), "1656");
+        assert_eq!(part2.to_string(), "195");
     }
 }
