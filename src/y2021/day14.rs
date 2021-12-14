@@ -13,7 +13,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
             .iter()
             .zip(state.iter().skip(1))
             .map(|(a, b)| {
-                // Find matching rules
+                // Find matching rule
                 let rule_match = rules.iter().find(|rule| rule.pattern == [*a, *b]);
                 if let Some(rule) = rule_match {
                     vec![*a, rule.result]
@@ -52,7 +52,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         }
         state = next_state;
     }
-    // Count total by counting all the first chars in each pattern then addding the
+    // Count total by counting all the first chars in each pattern then adding the
     // last char from the initial state which will still be the last char in the final
     // state
     let mut counts = HashMap::<char, u64>::new();
