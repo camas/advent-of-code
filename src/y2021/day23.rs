@@ -321,7 +321,6 @@ impl State {
 impl PartialEq for State {
     fn eq(&self, other: &Self) -> bool {
         (self.h + self.energy_used).eq(&(other.h + other.energy_used))
-        // self.energy_used.eq(&other.energy_used)
     }
 }
 
@@ -336,7 +335,6 @@ impl PartialOrd for State {
 impl Ord for State {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         (other.h + other.energy_used).cmp(&(self.h + self.energy_used))
-        // other.energy_used.cmp(&self.energy_used)
     }
 }
 
