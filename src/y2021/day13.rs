@@ -1,5 +1,7 @@
 use std::fmt::Display;
 
+use crate::common::parse_letters;
+
 pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     // Parse input
     let mut dots = Vec::new();
@@ -27,7 +29,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     for fold in &folds[1..] {
         grid.do_fold(fold);
     }
-    let part2 = grid.parse_letters();
+    let part2 = parse_letters(&grid.dots);
 
     (part1, part2)
 }
@@ -58,35 +60,6 @@ impl Grid {
             .iter()
             .map(|row| row.iter().filter(|&&d| d).count())
             .sum()
-    }
-
-    fn parse_letters(&self) -> String {
-        let mut letters = String::new();
-        // Each letter is 4 wide followed by an empty line
-        for i in 0..(self.dots[0].len() / 5) {
-            // Hash each letter for easier lookup
-            // Each dot just a bit in the hash, so no data lost
-            let mut hash = 0_u64;
-            for (y, row) in self.dots.iter().enumerate() {
-                let row_part = &row[(i * 5)..(i * 5 + 4)];
-                for (x, v) in row_part.iter().enumerate() {
-                    if *v {
-                        hash |= 1 << (y * 4 + x);
-                    }
-                }
-            }
-            letters.push(match hash {
-                1145239 => 'P',
-                6885782 => 'C',
-                10067865 => 'H',
-                10090902 => 'A',
-                9795991 => 'R',
-                9786201 => 'K',
-                15798545 => 'L',
-                _ => todo!(),
-            });
-        }
-        letters
     }
 
     fn do_fold(&mut self, fold: &Fold) {
