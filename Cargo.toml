@@ -2,12 +2,13 @@
 name = "advent-of-code"
 version = "0.1.0"
 authors = ["camas <camas@users.noreply.github.com>"]
-edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+edition = "2021"
 
 [dependencies]
-# Http requests
+# Logging
+log = "*"
+flexi_logger = "*"
+# HTTP requests
 ureq = "*"
 # Parallel iteration
 rayon = "*"
@@ -19,5 +20,5 @@ serde_json = "*"
 chrono = "*"
 # Number helpers
 num = "*"
-
+# SMT solver
 z3 = "*"
