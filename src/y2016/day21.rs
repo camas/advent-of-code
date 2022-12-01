@@ -27,7 +27,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
             }
             Instruction::RotateOnPosition { x } => {
                 let x_pos = data.iter().enumerate().find(|(_, c)| *c == x).unwrap().0;
-                let rot_amount = 1 + x_pos + if x_pos >= 4 { 1 } else { 0 };
+                let rot_amount = 1 + x_pos + usize::from(x_pos >= 4);
                 data.rotate_right(rot_amount % data_len);
             }
             Instruction::Reverse { x, y } => {

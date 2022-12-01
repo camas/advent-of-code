@@ -157,12 +157,12 @@ impl State {
             .data_pos
             .0
             .checked_sub(self.empty_pos.0)
-            .unwrap_or_else(|| self.empty_pos.0 - self.data_pos.0)
+            .unwrap_or(self.empty_pos.0 - self.data_pos.0)
             + self
                 .data_pos
                 .1
                 .checked_sub(self.empty_pos.1)
-                .unwrap_or_else(|| self.empty_pos.1 - self.data_pos.1);
+                .unwrap_or(self.empty_pos.1 - self.data_pos.1);
         dist_from_start << 32 | dist_from_empty
     }
 }

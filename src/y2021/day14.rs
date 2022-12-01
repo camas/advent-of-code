@@ -12,7 +12,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         let mut new_state = state
             .iter()
             .zip(state.iter().skip(1))
-            .map(|(a, b)| {
+            .flat_map(|(a, b)| {
                 // Find matching rule
                 let rule_match = rules.iter().find(|rule| rule.pattern == [*a, *b]);
                 if let Some(rule) = rule_match {
@@ -21,7 +21,6 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
                     vec![*a]
                 }
             })
-            .flatten()
             .collect::<Vec<_>>();
         new_state.push(*state.last().unwrap());
         state = new_state;

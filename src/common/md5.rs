@@ -45,7 +45,7 @@ pub fn md5(input: &[u8]) -> [u8; 16] {
         56 - data_len
     };
     data.extend(vec![0; add_count]);
-    data.extend(&(input.len() as u64 * 8).to_le_bytes());
+    data.extend((input.len() as u64 * 8).to_le_bytes());
     debug_assert_eq!(data.len() % 64, 0);
 
     // Hash

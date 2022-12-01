@@ -115,12 +115,12 @@ impl Character {
         let mut own_health = self.hitpoints;
         let mut other_health = other.hitpoints;
         loop {
-            let damage_done = (self.damage - other.armor).max(1) as i32;
+            let damage_done = (self.damage - other.armor).max(1);
             other_health -= damage_done;
             if other_health <= 0 {
                 return true;
             }
-            let damage_taken = (other.damage - self.armor).max(1) as i32;
+            let damage_taken = (other.damage - self.armor).max(1);
             own_health -= damage_taken;
             if own_health <= 0 {
                 return false;

@@ -2,8 +2,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     let nums = input
         .lines()
         .map(|l| {
-            l.trim_start()
-                .split_whitespace()
+            l.split_whitespace()
                 .map(|p| p.parse::<u64>().unwrap())
                 .collect::<Vec<_>>()
         })

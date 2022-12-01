@@ -141,8 +141,8 @@ impl Seating {
             .filter(|(dir_y, dir_x)| {
                 let mut result = false;
                 for i in 1.. {
-                    let cur_x = x as i64 + (*dir_x as i64 * i);
-                    let cur_y = y as i64 + (*dir_y as i64 * i);
+                    let cur_x = x as i64 + (*dir_x * i);
+                    let cur_y = y as i64 + (*dir_y * i);
                     if cur_x < 0
                         || cur_y < 0
                         || cur_x as usize >= self.data[0].len()

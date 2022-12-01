@@ -112,7 +112,7 @@ impl FromStr for Expression {
             ')' => Token::RightBracket,
             '+' => Token::Operator(Operator::Add),
             '*' => Token::Operator(Operator::Multiply),
-            n if n.is_digit(10) => Token::Number(n.to_digit(10).unwrap() as u64),
+            n if n.is_ascii_digit() => Token::Number(n.to_digit(10).unwrap() as u64),
             _ => unreachable!(),
         });
         Ok(Self::from_tokens(&mut tokens))

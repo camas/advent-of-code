@@ -18,7 +18,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     let decoded = target_molecule
         .replace("Rn", "(")
         .replace("Ar", ")")
-        .replace("Y", ",");
+        .replace('Y', ",");
     let total_elements = decoded
         .chars()
         .filter(|&c| ('A'..='Z').contains(&c) || c == '(' || c == ')' || c == ',')

@@ -61,11 +61,7 @@ impl Handler for DayHandler {
     fn input(&mut self, _: &Machine) -> i64 {
         assert!(matches!(self.state, HandlerState::SendInput));
         self.state = HandlerState::ReceiveColor;
-        if self.white_tiles.contains(&self.position) {
-            1
-        } else {
-            0
-        }
+        i64::from(self.white_tiles.contains(&self.position))
     }
 
     fn output(&mut self, _: &Machine, value: i64) {

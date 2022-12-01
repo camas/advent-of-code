@@ -75,20 +75,17 @@ fn step(grid: Vec<Vec<bool>>, transforms: &HashMap<Pattern, Pattern>) -> Vec<Vec
         for row in blocks {
             let inner_row_0 = row
                 .iter()
-                .map(|r| r.data[0].clone())
-                .flatten()
+                .flat_map(|r| r.data[0].clone())
                 .collect::<Vec<_>>();
             new_grid.push(inner_row_0);
             let inner_row_1 = row
                 .iter()
-                .map(|r| r.data[1].clone())
-                .flatten()
+                .flat_map(|r| r.data[1].clone())
                 .collect::<Vec<_>>();
             new_grid.push(inner_row_1);
             let inner_row_2 = row
                 .iter()
-                .map(|r| r.data[2].clone())
-                .flatten()
+                .flat_map(|r| r.data[2].clone())
                 .collect::<Vec<_>>();
             new_grid.push(inner_row_2);
         }
@@ -114,26 +111,22 @@ fn step(grid: Vec<Vec<bool>>, transforms: &HashMap<Pattern, Pattern>) -> Vec<Vec
         for row in blocks {
             let inner_row_0 = row
                 .iter()
-                .map(|r| r.data[0].clone())
-                .flatten()
+                .flat_map(|r| r.data[0].clone())
                 .collect::<Vec<_>>();
             new_grid.push(inner_row_0);
             let inner_row_1 = row
                 .iter()
-                .map(|r| r.data[1].clone())
-                .flatten()
+                .flat_map(|r| r.data[1].clone())
                 .collect::<Vec<_>>();
             new_grid.push(inner_row_1);
             let inner_row_2 = row
                 .iter()
-                .map(|r| r.data[2].clone())
-                .flatten()
+                .flat_map(|r| r.data[2].clone())
                 .collect::<Vec<_>>();
             new_grid.push(inner_row_2);
             let inner_row_3 = row
                 .iter()
-                .map(|r| r.data[3].clone())
-                .flatten()
+                .flat_map(|r| r.data[3].clone())
                 .collect::<Vec<_>>();
             new_grid.push(inner_row_3);
         }

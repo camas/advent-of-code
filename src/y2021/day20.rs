@@ -32,13 +32,12 @@ impl Image {
         let pixels = data
             .lines()
             .enumerate()
-            .map(|(y, l)| {
+            .flat_map(|(y, l)| {
                 l.chars()
                     .map(|c| c == '#')
                     .enumerate()
                     .filter_map(move |(x, b)| if b { Some((x as i64, y as i64)) } else { None })
             })
-            .flatten()
             .collect::<HashSet<_>>();
         let min_x = pixels.iter().map(|&(x, _)| x).min().unwrap();
         let max_x = pixels.iter().map(|&(x, _)| x).max().unwrap();

@@ -73,30 +73,14 @@ impl Lights {
         let xmin = x == 0;
         let ymax = y == 99;
         let ymin = y == 0;
-        let value = if !xmax && self.values[y][x + 1] { 1 } else { 0 }
-            + if !xmin && self.values[y][x - 1] { 1 } else { 0 }
-            + if !ymax && self.values[y + 1][x] { 1 } else { 0 }
-            + if !ymin && self.values[y - 1][x] { 1 } else { 0 }
-            + if !xmax && !ymax && self.values[y + 1][x + 1] {
-                1
-            } else {
-                0
-            }
-            + if !xmax && !ymin && self.values[y - 1][x + 1] {
-                1
-            } else {
-                0
-            }
-            + if !xmin && !ymax && self.values[y + 1][x - 1] {
-                1
-            } else {
-                0
-            }
-            + if !xmin && !ymin && self.values[y - 1][x - 1] {
-                1
-            } else {
-                0
-            };
+        let value = u32::from(!xmax && self.values[y][x + 1])
+            + u32::from(!xmin && self.values[y][x - 1])
+            + u32::from(!ymax && self.values[y + 1][x])
+            + u32::from(!ymin && self.values[y - 1][x])
+            + u32::from(!xmax && !ymax && self.values[y + 1][x + 1])
+            + u32::from(!xmax && !ymin && self.values[y - 1][x + 1])
+            + u32::from(!xmin && !ymax && self.values[y + 1][x - 1])
+            + u32::from(!xmin && !ymin && self.values[y - 1][x - 1]);
         value
     }
 }

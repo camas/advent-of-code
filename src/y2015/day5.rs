@@ -5,7 +5,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
             let mut chars = line.chars();
             let mut last_char = chars.next().unwrap();
             const VOWELS: [char; 5] = ['a', 'e', 'i', 'o', 'u'];
-            let mut vowel_count = if VOWELS.contains(&last_char) { 1 } else { 0 };
+            let mut vowel_count = i32::from(VOWELS.contains(&last_char));
             let mut contains_double = false;
             for c in chars {
                 if VOWELS.contains(&c) {

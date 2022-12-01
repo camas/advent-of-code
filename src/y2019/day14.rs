@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::collections::{HashMap, HashSet};
 
 pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     let reactions = input.lines().map(Reaction::from_str).collect::<Vec<_>>();

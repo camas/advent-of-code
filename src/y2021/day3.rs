@@ -12,10 +12,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     let inner_len = numbers[0].len();
 
     let gamma = most_common_bits(&numbers);
-    let epsilon = gamma
-        .iter()
-        .map(|v| if *v == 1 { 0 } else { 1 })
-        .collect::<Vec<_>>();
+    let epsilon = gamma.iter().map(|v| u32::from(*v != 1)).collect::<Vec<_>>();
 
     // Part 1 = most common (gamma) * least common (epsilon)
     let part1 = bits_to_int(&gamma) * bits_to_int(&epsilon);
@@ -35,7 +32,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         let most_common = most_common_bits(&search_space);
         let least_common = most_common
             .into_iter()
-            .map(|v| if v == 1 { 0 } else { 1 })
+            .map(|v| u32::from(v != 1))
             .collect::<Vec<_>>();
         search_space.retain(|v| v[i] == least_common[i]);
         if search_space.len() == 1 {
@@ -72,7 +69,7 @@ fn most_common_bits(numbers: &[Vec<u32>]) -> Vec<u32> {
 }
 
 fn bits_to_int(bits: &[u32]) -> u32 {
-    bits.iter().fold(0, |acc, &v| acc * 2 + v as u32)
+    bits.iter().fold(0, |acc, &v| acc * 2 + v)
 }
 
 #[cfg(test)]
