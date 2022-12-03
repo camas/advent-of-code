@@ -10,6 +10,7 @@ mod y2017;
 mod y2019;
 mod y2020;
 mod y2021;
+mod y2022;
 
 type RunnableClosure = Box<dyn Fn(&str) -> (String, String)>;
 
@@ -17,7 +18,7 @@ fn main() {
     let runners = initialize_runners();
 
     // Initialize logging
-    flexi_logger::Logger::try_with_str("trace")
+    flexi_logger::Logger::try_with_str("warn, advent_of_code=trace")
         .unwrap()
         .start()
         .unwrap();
@@ -54,7 +55,7 @@ fn main() {
         }
         2.. => {
             // Individual numbers given
-            if args[2] == "all" {
+            if args[1] == "all" {
                 (args.remove(0), vec!["all".to_string()])
             } else {
                 (args.remove(0), args)
@@ -299,5 +300,30 @@ fn initialize_runners() -> HashMap<(u32, u32), RunnableClosure> {
     runners.insert((2021, 23), run_day!(y2021, day23));
     runners.insert((2021, 24), run_day!(y2021, day24));
     runners.insert((2021, 25), run_day!(y2021, day25));
+    runners.insert((2022, 1), run_day!(y2022, day1));
+    // runners.insert((2022, 2), run_day!(y2022, day2));
+    // runners.insert((2022, 3), run_day!(y2022, day3));
+    // runners.insert((2022, 4), run_day!(y2022, day4));
+    // runners.insert((2022, 5), run_day!(y2022, day5));
+    // runners.insert((2022, 6), run_day!(y2022, day6));
+    // runners.insert((2022, 7), run_day!(y2022, day7));
+    // runners.insert((2022, 8), run_day!(y2022, day8));
+    // runners.insert((2022, 9), run_day!(y2022, day9));
+    // runners.insert((2022, 10), run_day!(y2022, day10));
+    // runners.insert((2022, 11), run_day!(y2022, day11));
+    // runners.insert((2022, 12), run_day!(y2022, day12));
+    // runners.insert((2022, 13), run_day!(y2022, day13));
+    // runners.insert((2022, 14), run_day!(y2022, day14));
+    // runners.insert((2022, 15), run_day!(y2022, day15));
+    // runners.insert((2022, 16), run_day!(y2022, day16));
+    // runners.insert((2022, 17), run_day!(y2022, day17));
+    // runners.insert((2022, 18), run_day!(y2022, day18));
+    // runners.insert((2022, 19), run_day!(y2022, day19));
+    // runners.insert((2022, 20), run_day!(y2022, day20));
+    // runners.insert((2022, 21), run_day!(y2022, day21));
+    // runners.insert((2022, 22), run_day!(y2022, day22));
+    // runners.insert((2022, 23), run_day!(y2022, day23));
+    // runners.insert((2022, 24), run_day!(y2022, day24));
+    // runners.insert((2022, 25), run_day!(y2022, day25));
     runners
 }
