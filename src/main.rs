@@ -305,9 +305,9 @@ fn initialize_runners() -> HashMap<(u32, u32), RunnableClosure> {
     runners.insert((2022, 3), run_day!(y2022, day3));
     runners.insert((2022, 4), run_day!(y2022, day4));
     runners.insert((2022, 5), run_day!(y2022, day5));
-    // runners.insert((2022, 6), run_day!(y2022, day6));
-    // runners.insert((2022, 7), run_day!(y2022, day7));
-    // runners.insert((2022, 8), run_day!(y2022, day8));
+    runners.insert((2022, 6), run_day!(y2022, day6));
+    runners.insert((2022, 7), run_day!(y2022, day7));
+    runners.insert((2022, 8), run_day!(y2022, day8));
     // runners.insert((2022, 9), run_day!(y2022, day9));
     // runners.insert((2022, 10), run_day!(y2022, day10));
     // runners.insert((2022, 11), run_day!(y2022, day11));
