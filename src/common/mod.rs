@@ -1,7 +1,10 @@
 mod math;
-pub use math::*;
 mod md5;
+mod vector;
+
+pub use math::*;
 pub use md5::*;
+pub use vector::*;
 
 pub fn parse_letters(dots: &[Vec<bool>]) -> String {
     let mut letters = String::new();

@@ -1,4 +1,6 @@
-use std::{ops::AddAssign, str::FromStr};
+use std::str::FromStr;
+
+use crate::common::Vector2;
 
 pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     let forest = input.parse::<Forest>().unwrap();
@@ -165,25 +167,6 @@ impl FromStr for Forest {
             .all(|row| row.len() == tree_heights[0].len()));
 
         Ok(Forest { tree_heights })
-    }
-}
-
-#[derive(Debug, Clone, Copy)]
-struct Vector2 {
-    x: i64,
-    y: i64,
-}
-
-impl Vector2 {
-    fn new(x: i64, y: i64) -> Vector2 {
-        Vector2 { x, y }
-    }
-}
-
-impl AddAssign for Vector2 {
-    fn add_assign(&mut self, rhs: Self) {
-        self.x += rhs.x;
-        self.y += rhs.y;
     }
 }
 
