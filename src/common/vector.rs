@@ -1,4 +1,4 @@
-use std::ops::{AddAssign, Sub, SubAssign};
+use std::ops::{AddAssign, Sub};
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Vector2 {

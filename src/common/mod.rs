@@ -39,7 +39,19 @@ pub fn parse_letters(dots: &[Vec<bool>]) -> String {
             1120031 => 'F',
             15803535 => 'Z',
             6920601 => 'U',
-            _ => panic!("Unknown hash {}", hash),
+            _ => {
+                println!(
+                    "{}",
+                    dots.iter()
+                        .map(|line| line
+                            .iter()
+                            .map(|v| if *v { '#' } else { '.' })
+                            .collect::<String>())
+                        .collect::<Vec<_>>()
+                        .join("\n")
+                );
+                panic!("Unknown hash {}", hash);
+            }
         });
     }
     letters
