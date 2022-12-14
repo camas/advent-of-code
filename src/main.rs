@@ -310,10 +310,10 @@ fn initialize_runners() -> HashMap<(u32, u32), RunnableClosure> {
     runners.insert((2022, 8), run_day!(y2022, day8));
     runners.insert((2022, 9), run_day!(y2022, day9));
     runners.insert((2022, 10), run_day!(y2022, day10));
-    // runners.insert((2022, 11), run_day!(y2022, day11));
-    // runners.insert((2022, 12), run_day!(y2022, day12));
-    // runners.insert((2022, 13), run_day!(y2022, day13));
-    // runners.insert((2022, 14), run_day!(y2022, day14));
+    runners.insert((2022, 11), run_day!(y2022, day11));
+    runners.insert((2022, 12), run_day!(y2022, day12));
+    runners.insert((2022, 13), run_day!(y2022, day13));
+    runners.insert((2022, 14), run_day!(y2022, day14));
     // runners.insert((2022, 15), run_day!(y2022, day15));
     // runners.insert((2022, 16), run_day!(y2022, day16));
     // runners.insert((2022, 17), run_day!(y2022, day17));

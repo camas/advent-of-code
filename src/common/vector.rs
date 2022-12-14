@@ -1,4 +1,4 @@
-use std::ops::{AddAssign, Sub};
+use std::ops::{Add, AddAssign, Sub};
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Vector2 {
@@ -9,6 +9,17 @@ pub struct Vector2 {
 impl Vector2 {
     pub fn new(x: i64, y: i64) -> Vector2 {
         Vector2 { x, y }
+    }
+}
+
+impl Add for Vector2 {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Vector2 {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
     }
 }
 
