@@ -1,3 +1,5 @@
+#![feature(binary_heap_retain)]
+
 use std::{collections::HashMap, io::Write, time::Instant};
 
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime, Utc};
@@ -314,9 +316,9 @@ fn initialize_runners() -> HashMap<(u32, u32), RunnableClosure> {
     runners.insert((2022, 12), run_day!(y2022, day12));
     runners.insert((2022, 13), run_day!(y2022, day13));
     runners.insert((2022, 14), run_day!(y2022, day14));
-    // runners.insert((2022, 15), run_day!(y2022, day15));
-    // runners.insert((2022, 16), run_day!(y2022, day16));
-    // runners.insert((2022, 17), run_day!(y2022, day17));
+    runners.insert((2022, 15), run_day!(y2022, day15));
+    runners.insert((2022, 16), run_day!(y2022, day16));
+    runners.insert((2022, 17), run_day!(y2022, day17));
     // runners.insert((2022, 18), run_day!(y2022, day18));
     // runners.insert((2022, 19), run_day!(y2022, day19));
     // runners.insert((2022, 20), run_day!(y2022, day20));

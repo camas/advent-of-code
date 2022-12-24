@@ -10,6 +10,10 @@ impl Vector2 {
     pub fn new(x: i64, y: i64) -> Vector2 {
         Vector2 { x, y }
     }
+
+    pub fn manhattan_distance(&self, other: Vector2) -> i64 {
+        (self.x - other.x).abs() + (self.y - other.y).abs()
+    }
 }
 
 impl Add for Vector2 {
