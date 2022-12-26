@@ -4,7 +4,7 @@ use nom::{
     bytes::complete::tag,
     character::complete::{alpha1, digit1},
     combinator::{map, map_res, opt, recognize},
-    multi::{many1, separated_list},
+    multi::{many1, separated_list0},
     sequence::{delimited, preceded, separated_pair},
     IResult,
 };
@@ -231,7 +231,7 @@ fn parse_recipie(s: &str) -> IResult<&str, Recipie> {
     let (s, output) = preceded(preceded(opt(tag(" ")), tag("Each ")), parse_resource)(s)?;
     let (s, inputs) = delimited(
         tag(" robot costs "),
-        separated_list(
+        separated_list0(
             tag(" and "),
             separated_pair(parse_i64, tag(" "), parse_resource),
         ),
