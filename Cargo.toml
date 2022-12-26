@@ -22,3 +22,5 @@ chrono = "*"
 num = "*"
 # SMT solver
 z3 = "*"
+# Parsing
+nom = "*"

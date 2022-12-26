@@ -61,10 +61,10 @@ fn measure_tower(shapes: &[Shape], moves: &[Move], drop_count: usize) -> usize {
         {
             let cycle_size = i - first_i;
             let cycle_height = tower.height() - first_height;
-            let (skipped_cycles, remaining_iterations) = (drop_count - i).div_rem(&cycle_size);
+            let (skipped_cycles, remaining_iterations) = (drop_count - 1 - i).div_rem(&cycle_size);
             let skipped_height = skipped_cycles * cycle_height;
 
-            for j in (i + 1)..(i + remaining_iterations) {
+            for j in (i + 1)..(i + 1 + remaining_iterations) {
                 let shape_index = j % shapes.len();
                 let shape = &shapes[shape_index];
                 tower.drop_shape(shape);
