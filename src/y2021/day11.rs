@@ -1,11 +1,13 @@
+use std::collections::HashSet;
+
 pub fn solve(input: &str) -> (impl ToString, impl ToString) {
-    let mut octopuses = Octopuses::from_str(input);
+    let mut octopuses = Octopuses::from_str(input.trim());
 
     let mut part1 = None;
     let mut part2 = None;
     for i in 0.. {
         octopuses.step();
-        if i == 101 {
+        if i == 99 {
             part1 = Some(octopuses.flash_count);
         }
         if octopuses.all_zero() {
@@ -47,39 +49,57 @@ impl Octopuses {
     fn step(&mut self) {
         let mut queue = Vec::new();
 
-        // Add all indexes to queue (only 100 so not too bad)
         for y in 0..self.height {
             for x in 0..self.width {
-                queue.push((x as i8, y as i8));
+                self.values[y][x] += 1;
+                if self.values[y][x] > 9 {
+                    queue.push((x as i64, y as i64));
+                }
             }
         }
 
         // Continue until all flashes handled
-        while !queue.is_empty() {
-            let (x, y) = queue.pop().unwrap();
-            if x < 0 || x as usize >= self.width || y < 0 || y as usize >= self.height {
+        let mut seen = HashSet::new();
+        while let Some((x, y)) = queue.pop() {
+            if !seen.insert((x, y)) {
                 continue;
             }
-            self.values[y as usize][x as usize] += 1;
-            if self.values[y as usize][x as usize] == 10 {
-                self.flash_count += 1;
-                queue.push((x - 1, y));
-                queue.push((x + 1, y));
-                queue.push((x, y - 1));
-                queue.push((x, y + 1));
-                queue.push((x - 1, y - 1));
-                queue.push((x + 1, y - 1));
-                queue.push((x - 1, y + 1));
-                queue.push((x + 1, y + 1));
+
+            self.flash_count += 1;
+
+            let adjacent = [
+                (x - 1, y),
+                (x + 1, y),
+                (x, y - 1),
+                (x, y + 1),
+                (x - 1, y - 1),
+                (x + 1, y - 1),
+                (x - 1, y + 1),
+                (x + 1, y + 1),
+            ];
+            for (adj_x, adj_y) in adjacent {
+                if !self.in_bounds(adj_x, adj_y) {
+                    continue;
+                }
+                self.values[adj_y as usize][adj_x as usize] += 1;
+                if self.values[adj_y as usize][adj_x as usize] > 9 {
+                    queue.push((adj_x, adj_y));
+                }
             }
         }
 
         // Normalize
         for row in self.values.iter_mut() {
             for value in row.iter_mut() {
-                *value = if *value <= 9 { *value } else { 0 };
+                if *value > 9 {
+                    *value = 0;
+                }
             }
         }
+    }
+
+    fn in_bounds(&self, x: i64, y: i64) -> bool {
+        x >= 0 && (x as usize) < self.width && y >= 0 && (y as usize) < self.height
     }
 
     fn all_zero(&self) -> bool {
@@ -105,7 +125,7 @@ mod tests {
 
     #[test]
     fn test_known() {
-        let data = r"5483143223
+        let data = "5483143223
 2745854711
 5264556173
 6141336146
@@ -115,8 +135,10 @@ mod tests {
 6882881134
 4846848554
 5283751526";
+
         let (part1, part2) = solve(data);
-        assert_eq!(part1.to_string(), "1656");
-        assert_eq!(part2.to_string(), "195");
+
+        assert_eq!(part1.to_string(), 1656.to_string());
+        assert_eq!(part2.to_string(), 195.to_string());
     }
 }

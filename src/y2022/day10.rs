@@ -3,6 +3,11 @@ use std::{num::ParseIntError, str::FromStr};
 use crate::common::parse_letters;
 
 pub fn solve(input: &str) -> (impl ToString, impl ToString) {
+    let result = solve_inner(input);
+    (result.0, parse_letters(&result.1))
+}
+
+fn solve_inner(input: &str) -> (impl ToString, Vec<Vec<bool>>) {
     let instructions = input
         .lines()
         .map(|l| l.parse::<Instruction>().unwrap())
@@ -28,7 +33,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         computer.cycle();
     }
 
-    let part2 = parse_letters(&part2.chunks(40).map(|c| c.to_vec()).collect::<Vec<_>>());
+    let part2 = part2.chunks(40).map(|c| c.to_vec()).collect::<Vec<_>>();
 
     (part1, part2)
 }
@@ -249,8 +254,25 @@ noop
 noop
 noop";
 
-        let result = solve(input);
+        let result = solve_inner(input);
 
         assert_eq!(result.0.to_string(), 13140.to_string());
+        let result2_str = result
+            .1
+            .iter()
+            .map(|line| {
+                line.iter()
+                    .map(|v| if *v { '#' } else { '.' })
+                    .collect::<String>()
+            })
+            .collect::<Vec<_>>()
+            .join("\n");
+        let expected_str = "##..##..##..##..##..##..##..##..##..##..
+###...###...###...###...###...###...###.
+####....####....####....####....####....
+#####.....#####.....#####.....#####.....
+######......######......######......####
+#######.......#######.......#######.....";
+        assert_eq!(result2_str, expected_str);
     }
 }

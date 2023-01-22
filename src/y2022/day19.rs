@@ -29,16 +29,15 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
             vec![Resource::Ore, Resource::Clay],
             vec![Resource::Ore, Resource::Obsidian],
         ];
-        for ((recipie, expected_output), expected_inputs) in blueprint
-            .recipies
+        for ((recipe, expected_output), expected_inputs) in blueprint
+            .recipes
             .iter()
             .zip(expected_outputs.iter())
             .zip(expected_inputs.iter())
         {
-            assert_eq!(&recipie.output, expected_output);
-            assert_eq!(recipie.inputs.len(), expected_inputs.len());
-            for (input, expected_input) in
-                recipie.inputs.iter().map(|(r, _)| r).zip(expected_inputs)
+            assert_eq!(&recipe.output, expected_output);
+            assert_eq!(recipe.inputs.len(), expected_inputs.len());
+            for (input, expected_input) in recipe.inputs.iter().map(|(r, _)| r).zip(expected_inputs)
             {
                 assert_eq!(input, expected_input);
             }
@@ -62,11 +61,11 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
 #[derive(Debug)]
 struct Blueprint {
     id: i64,
-    recipies: Vec<Recipie>,
+    recipes: Vec<Recipe>,
 }
 
 #[derive(Debug)]
-struct Recipie {
+struct Recipe {
     output: Resource,
     inputs: Vec<(Resource, i64)>,
 }
@@ -97,7 +96,7 @@ impl Blueprint {
         let mut max_incomes = [Resource::Ore, Resource::Clay, Resource::Obsidian]
             .into_iter()
             .map(|resource| {
-                self.recipies
+                self.recipes
                     .iter()
                     .filter_map(|r| {
                         r.inputs
@@ -133,7 +132,7 @@ impl Blueprint {
                 best = score;
             }
 
-            queue.extend(state.moves(&self.recipies, &max_incomes));
+            queue.extend(state.moves(&self.recipes, &max_incomes));
         }
 
         best
@@ -141,16 +140,16 @@ impl Blueprint {
 }
 
 impl State {
-    fn moves(&self, recipies: &[Recipie], max_incomes: &[i64]) -> Vec<State> {
+    fn moves(&self, recipes: &[Recipe], max_incomes: &[i64]) -> Vec<State> {
         let mut moves = Vec::new();
 
-        for recipie in recipies {
-            if self.income[recipie.output.as_index()] >= max_incomes[recipie.output.as_index()] {
+        for recipe in recipes {
+            if self.income[recipe.output.as_index()] >= max_incomes[recipe.output.as_index()] {
                 continue;
             }
 
-            // Check income to reach recipie
-            if !recipie
+            // Check income to reach recipe
+            if !recipe
                 .inputs
                 .iter()
                 .all(|(resource, _)| self.income[resource.as_index()] > 0)
@@ -158,8 +157,8 @@ impl State {
                 continue;
             }
 
-            // Calculate time needed to afford recipie
-            let time_taken = recipie
+            // Calculate time needed to afford recipe
+            let time_taken = recipe
                 .inputs
                 .iter()
                 .map(|(resource, amount)| {
@@ -183,12 +182,12 @@ impl State {
                 .for_each(|(res, inc)| *res += inc * time_taken);
 
             // Subtract amounts
-            recipie.inputs.iter().for_each(|(resource, amount)| {
+            recipe.inputs.iter().for_each(|(resource, amount)| {
                 new_state.resources[resource.as_index()] -= amount;
             });
 
             // Add income
-            new_state.income[recipie.output.as_index()] += 1;
+            new_state.income[recipe.output.as_index()] += 1;
 
             moves.push(new_state);
         }
@@ -222,12 +221,12 @@ impl Resource {
 
 fn parse_blueprint(s: &str) -> IResult<&str, Blueprint> {
     let (s, id) = preceded(tag("Blueprint "), parse_i64)(s)?;
-    let (s, recipies) = preceded(tag(": "), many1(parse_recipie))(s)?;
+    let (s, recipes) = preceded(tag(": "), many1(parse_recipe))(s)?;
 
-    Ok((s, Blueprint { id, recipies }))
+    Ok((s, Blueprint { id, recipes }))
 }
 
-fn parse_recipie(s: &str) -> IResult<&str, Recipie> {
+fn parse_recipe(s: &str) -> IResult<&str, Recipe> {
     let (s, output) = preceded(preceded(opt(tag(" ")), tag("Each ")), parse_resource)(s)?;
     let (s, inputs) = delimited(
         tag(" robot costs "),
@@ -240,7 +239,7 @@ fn parse_recipie(s: &str) -> IResult<&str, Recipie> {
 
     let inputs = inputs.into_iter().map(|(a, b)| (b, a)).collect();
 
-    Ok((s, Recipie { output, inputs }))
+    Ok((s, Recipe { output, inputs }))
 }
 
 fn parse_resource(s: &str) -> IResult<&str, Resource> {
