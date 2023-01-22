@@ -24,3 +24,5 @@ num = "*"
 z3 = "*"
 # Parsing
 nom = "*"
+# Fractions
+num-rational = "*"

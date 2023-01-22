@@ -1,18 +1,24 @@
 mod math;
 mod md5;
-mod vector;
+mod vector2;
+mod vector3;
 
 pub use math::*;
 pub use md5::*;
-pub use vector::*;
+pub use vector2::*;
+pub use vector3::*;
 
+/// Parses the block letters that AoC likes to output
+///
+/// Could just print it but this lets it fit in a single line
 pub fn parse_letters(dots: &[Vec<bool>]) -> String {
-    let mut letters = String::new();
     // Special case: last empty row not passed
     let mut dots_len = dots[0].len();
     if dots_len % 5 == 4 {
         dots_len += 1;
     }
+
+    let mut letters = String::new();
     // Each letter is 4 wide followed by an empty line
     for i in 0..(dots_len / 5) {
         // Hash each letter for easier lookup
