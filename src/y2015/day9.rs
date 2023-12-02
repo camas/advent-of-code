@@ -35,8 +35,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
             };
             let mut states = vec![initial_state];
             let mut best = u32::MAX;
-            while !states.is_empty() {
-                let current_state = states.pop().unwrap();
+            while let Some(current_state) = states.pop() {
                 if current_state.visited.len() == locations.len() {
                     // Check result
                     if current_state.total < best {
@@ -74,8 +73,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
             };
             let mut states = vec![initial_state];
             let mut best = u32::MIN;
-            while !states.is_empty() {
-                let current_state = states.pop().unwrap();
+            while let Some(current_state) = states.pop() {
                 if current_state.visited.len() == locations.len() {
                     // Check result
                     if current_state.total > best {

@@ -15,8 +15,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         .collect::<HashMap<_, _>>();
     let mut seen = HashSet::new();
     let mut queue = vec![0];
-    while !queue.is_empty() {
-        let id = queue.pop().unwrap();
+    while let Some(id) = queue.pop() {
         if !seen.insert(id) {
             continue;
         }
@@ -44,8 +43,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         let initial_id = not_seen.pop().unwrap();
         let mut seen = HashSet::new();
         let mut queue = vec![initial_id];
-        while !queue.is_empty() {
-            let id = queue.pop().unwrap();
+        while let Some(id) = queue.pop() {
             if !seen.insert(id) {
                 continue;
             }

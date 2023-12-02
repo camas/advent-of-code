@@ -1,4 +1,3 @@
-
 pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     let mut lines = input.lines();
     let boss_hitpoints = lines
@@ -26,8 +25,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     };
     let mut states = vec![initial_state];
     let mut lowest_mana_win = u32::MAX;
-    while !states.is_empty() {
-        let mut state = states.pop().unwrap();
+    while let Some(mut state) = states.pop() {
         if state.mana_spent > lowest_mana_win {
             continue;
         }
@@ -143,8 +141,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     };
     let mut states = vec![initial_state];
     let mut lowest_mana_win = u32::MAX;
-    while !states.is_empty() {
-        let mut state = states.pop().unwrap();
+    while let Some(mut state) = states.pop() {
         if state.mana_spent >= lowest_mana_win {
             continue;
         }

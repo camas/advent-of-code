@@ -9,8 +9,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
 
     let mut total = 0_u64;
     let mut queue = vec![&root_packet];
-    while !queue.is_empty() {
-        let curr = queue.pop().unwrap();
+    while let Some(curr) = queue.pop() {
         match curr {
             Packet::Literal { version, .. } => total += *version as u64,
             Packet::Sum {

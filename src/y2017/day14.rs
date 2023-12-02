@@ -1,4 +1,3 @@
-
 pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     let key = input.trim();
     let part1 = (0..128)
@@ -35,8 +34,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
 
             cur_group += 1;
             let mut queue = vec![(y as i32, x as i32)];
-            while !queue.is_empty() {
-                let (test_y, test_x) = queue.pop().unwrap();
+            while let Some((test_y, test_x)) = queue.pop() {
                 if test_x < 0 || test_y < 0 || test_x >= 128 || test_y >= 128 {
                     continue;
                 }

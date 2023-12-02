@@ -216,7 +216,7 @@ impl FromStr for Data {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let first = s.chars().next().unwrap();
-        if ('0'..='9').contains(&first) || first == '-' {
+        if first.is_ascii_digit() || first == '-' {
             Ok(Data::Value(s.parse()?))
         } else {
             Ok(Data::Register(first))

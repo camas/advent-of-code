@@ -14,8 +14,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     };
     let mut queue = vec![&shiny_gold];
     let mut found: HashSet<&Bag> = HashSet::new();
-    while !queue.is_empty() {
-        let current = queue.pop().unwrap();
+    while let Some(current) = queue.pop() {
         let contained_in = rules
             .iter()
             .filter(|rule| rule.contains.iter().any(|(inner, _)| inner == current))
@@ -30,8 +29,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     // Find all children
     let mut queue = vec![&shiny_gold];
     let mut found = HashSet::new();
-    while !queue.is_empty() {
-        let current = queue.pop().unwrap();
+    while let Some(current) = queue.pop() {
         found.insert(current);
         let current_rule = rule_dict.get(current).unwrap();
         queue.extend(current_rule.contains.iter().map(|(bag, _)| bag));

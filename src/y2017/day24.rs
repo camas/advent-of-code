@@ -27,8 +27,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
             }
         })
         .collect::<Vec<_>>();
-    while !queue.is_empty() {
-        let curr = queue.pop().unwrap();
+    while let Some(curr) = queue.pop() {
         if curr.current_strength > best {
             best = curr.current_strength;
         }
@@ -77,8 +76,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
             }
         })
         .collect::<Vec<_>>();
-    while !queue.is_empty() {
-        let curr = queue.pop().unwrap();
+    while let Some(curr) = queue.pop() {
         if curr.length >= best_length && curr.strength > best_strength {
             best_length = curr.length;
             best_strength = curr.strength;

@@ -31,9 +31,7 @@ impl<'a> Map<'a> {
         };
         let mut queue = vec![initial];
         let mut distinct_paths = 0;
-        while !queue.is_empty() {
-            let mut curr = queue.pop().unwrap();
-
+        while let Some(mut curr) = queue.pop() {
             if matches!(curr.current, Cave::End) {
                 distinct_paths += 1;
                 continue;

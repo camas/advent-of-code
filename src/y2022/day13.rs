@@ -63,21 +63,24 @@ enum PacketValue {
     Number(i64),
 }
 
-impl PartialOrd for Packet {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+impl Ord for Packet {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        if self == other {
+            return Ordering::Equal;
+        }
         for items in self.values.iter().zip(other.values.iter()) {
             match items {
                 (PacketValue::Number(a), PacketValue::Number(b)) => {
                     if a < b {
-                        return Some(Ordering::Less);
+                        return Ordering::Less;
                     }
                     if a > b {
-                        return Some(Ordering::Greater);
+                        return Ordering::Greater;
                     }
                 }
                 (PacketValue::Packet(a), PacketValue::Packet(b)) => {
                     let result = a.partial_cmp(b);
-                    if result.is_some() {
+                    if let Some(result) = result {
                         return result;
                     }
                 }
@@ -86,7 +89,7 @@ impl PartialOrd for Packet {
                         values: vec![PacketValue::Number(*a)],
                     };
                     let result = tmp_packet.partial_cmp(b);
-                    if result.is_some() {
+                    if let Some(result) = result {
                         return result;
                     }
                 }
@@ -95,7 +98,7 @@ impl PartialOrd for Packet {
                         values: vec![PacketValue::Number(*b)],
                     };
                     let result = a.partial_cmp(&tmp_packet);
-                    if result.is_some() {
+                    if let Some(result) = result {
                         return result;
                     }
                 }
@@ -103,22 +106,19 @@ impl PartialOrd for Packet {
         }
 
         if self.values.len() < other.values.len() {
-            return Some(Ordering::Less);
+            return Ordering::Less;
         }
         if self.values.len() > other.values.len() {
-            return Some(Ordering::Greater);
+            return Ordering::Greater;
         }
 
-        None
+        Ordering::Equal
     }
 }
 
-impl Ord for Packet {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        if self == other {
-            return Ordering::Equal;
-        }
-        self.partial_cmp(other).unwrap()
+impl PartialOrd for Packet {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
     }
 }
 

@@ -182,7 +182,7 @@ impl FromStr for Data {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let c = s.chars().next().unwrap();
-        if ('a'..='z').contains(&c) {
+        if c.is_ascii_lowercase() {
             Ok(Data::Register(c as usize - 'a' as usize))
         } else {
             Ok(Data::Value(s.parse()?))

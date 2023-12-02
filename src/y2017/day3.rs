@@ -11,7 +11,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     let part1 = answer;
 
     let mut values: HashMap<i32, HashMap<i32, i32>> = HashMap::new();
-    values.entry(0).or_insert_with(HashMap::new).insert(0, 1);
+    values.entry(0).or_default().insert(0, 1);
     let mut x = 0;
     let mut y = 0;
     for n in 1.. {
@@ -32,7 +32,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
                                 } else {
                                     *values
                                         .entry(check_y)
-                                        .or_insert_with(HashMap::new)
+                                        .or_default()
                                         .get(&check_x)
                                         .unwrap_or(&0)
                                 }
@@ -43,10 +43,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
                 if value > target {
                     return (part1, value);
                 }
-                values
-                    .entry(y)
-                    .or_insert_with(HashMap::new)
-                    .insert(x, value);
+                values.entry(y).or_default().insert(x, value);
             }
         }
     }

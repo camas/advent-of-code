@@ -155,7 +155,7 @@ impl FromStr for Forest {
             .map(|l| {
                 l.chars()
                     .map(|c| {
-                        assert!((b'0'..=b'9').contains(&(c as u8)));
+                        assert!(c.is_ascii_digit());
                         c as u8 - b'0'
                     })
                     .collect::<Vec<_>>()

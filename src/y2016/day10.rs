@@ -8,7 +8,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     for instruction in instructions {
         match instruction {
             Instruction::Give { bot, value } => {
-                values.entry(bot).or_insert_with(Vec::new).push(value);
+                values.entry(bot).or_default().push(value);
             }
             Instruction::Move { bot, .. } => {
                 moves.insert(bot, instruction);
@@ -38,17 +38,13 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
                     (bot_values[1], bot_values[0])
                 };
                 match low {
-                    Destination::Bot(id) => {
-                        values.entry(*id).or_insert_with(Vec::new).push(low_value)
-                    }
+                    Destination::Bot(id) => values.entry(*id).or_default().push(low_value),
                     Destination::Output(id) => {
                         output.insert(*id, low_value);
                     }
                 }
                 match high {
-                    Destination::Bot(id) => {
-                        values.entry(*id).or_insert_with(Vec::new).push(high_value)
-                    }
+                    Destination::Bot(id) => values.entry(*id).or_default().push(high_value),
                     Destination::Output(id) => {
                         output.insert(*id, high_value);
                     }

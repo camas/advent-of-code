@@ -55,7 +55,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         if !hair.starts_with('#')
             || !hair[1..]
                 .chars()
-                .all(|c| ('0'..='9').contains(&c) || ('a'..='f').contains(&c))
+                .all(|c| c.is_ascii_digit() || ('a'..='f').contains(&c))
         {
             continue;
         }
@@ -63,7 +63,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
             continue;
         }
         let id = passport["pid"];
-        if id.chars().count() != 9 || id.chars().any(|c| !('0'..='9').contains(&c)) {
+        if id.chars().count() != 9 || id.chars().any(|c| !c.is_ascii_digit()) {
             continue;
         }
 

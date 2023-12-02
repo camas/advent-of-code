@@ -1,3 +1,5 @@
+use std::fmt::Write;
+
 pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     let moves = input
         .lines()
@@ -95,8 +97,10 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
             }
             key
         })
-        .map(|v| format!("{:X}", v))
-        .collect::<String>();
+        .fold(String::new(), |mut result, v| {
+            write!(result, "{v:X}").unwrap();
+            result
+        });
 
     (part1, part2)
 }

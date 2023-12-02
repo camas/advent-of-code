@@ -100,10 +100,10 @@ impl FromStr for Source {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let c = s.chars().next().unwrap();
-        if ('a'..='z').contains(&c) {
-            Ok(Source::Register(c as usize - 'a' as usize))
+        Ok(if c.is_ascii_lowercase() {
+            Source::Register(c as usize - 'a' as usize)
         } else {
-            Ok(Source::Value(s.parse()?))
-        }
+            Source::Value(s.parse()?)
+        })
     }
 }

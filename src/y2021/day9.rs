@@ -29,8 +29,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
 
             let mut queue = vec![(x, y)];
             let mut seen = HashSet::new();
-            while !queue.is_empty() {
-                let curr = queue.pop().unwrap();
+            while let Some(curr) = queue.pop() {
                 if seen.contains(&curr) {
                     continue;
                 }

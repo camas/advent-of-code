@@ -30,8 +30,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     let mut map = HashMap::new();
     map.insert((0, 0), unused.pop().unwrap());
     let mut queue = vec![(0, 0)];
-    while !queue.is_empty() {
-        let tile_pos = queue.pop().unwrap();
+    while let Some(tile_pos) = queue.pop() {
         // Could do this without cloning
         let tile = map.get(&tile_pos).unwrap().clone();
         const DIRS: [(Side, (i32, i32)); 4] = [

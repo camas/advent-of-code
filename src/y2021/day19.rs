@@ -35,8 +35,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         scanner: 0,
     }];
     let mut queue = vec![0];
-    while !queue.is_empty() {
-        let scanner_index = queue.pop().unwrap();
+    while let Some(scanner_index) = queue.pop() {
         let m = matches
             .keys()
             .filter(|(a, b)| {

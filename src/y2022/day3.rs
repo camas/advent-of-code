@@ -72,8 +72,8 @@ impl FromStr for Rucksack {
         let compartment2 = compartment1.split_off(compartment1.len() / 2);
 
         Ok(Rucksack {
-            compartment1: HashSet::from_iter(compartment1.into_iter()),
-            compartment2: HashSet::from_iter(compartment2.into_iter()),
+            compartment1: HashSet::from_iter(compartment1),
+            compartment2: HashSet::from_iter(compartment2),
         })
     }
 }

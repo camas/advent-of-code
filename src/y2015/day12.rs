@@ -5,8 +5,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
 
     let mut total = 0;
     let mut q = vec![&root];
-    while !q.is_empty() {
-        let node = q.pop().unwrap();
+    while let Some(node) = q.pop() {
         match node {
             Value::Null => {}
             Value::Bool(_) => {}
@@ -20,8 +19,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
 
     let mut total = 0;
     let mut q = vec![&root];
-    while !q.is_empty() {
-        let node = q.pop().unwrap();
+    while let Some(node) = q.pop() {
         match node {
             Value::Null => {}
             Value::Bool(_) => {}

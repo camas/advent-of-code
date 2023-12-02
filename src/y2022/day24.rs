@@ -183,15 +183,15 @@ impl State {
     }
 }
 
-impl PartialOrd for State {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.h.partial_cmp(&other.h).map(Ordering::reverse)
+impl Ord for State {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.h.cmp(&other.h).reverse()
     }
 }
 
-impl Ord for State {
-    fn cmp(&self, other: &Self) -> Ordering {
-        self.partial_cmp(other).unwrap()
+impl PartialOrd for State {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
     }
 }
 

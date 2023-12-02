@@ -204,15 +204,15 @@ impl State {
     }
 }
 
-impl PartialOrd for State {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        self.h.partial_cmp(&other.h)
+impl Ord for State {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.h.cmp(&other.h)
     }
 }
 
-impl Ord for State {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.partial_cmp(other).unwrap()
+impl PartialOrd for State {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
     }
 }
 
@@ -256,7 +256,7 @@ impl FromStr for Volcano {
                 .iter()
                 .map(|c| ValveRef(valves.iter().position(|v| v.name == *c).unwrap()))
                 .collect();
-            let mut valve = valves.iter_mut().find(|v| v.name == *name).unwrap();
+            let valve = valves.iter_mut().find(|v| v.name == *name).unwrap();
             valve.connections = connections;
         }
 
