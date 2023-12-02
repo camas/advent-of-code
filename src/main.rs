@@ -1,4 +1,3 @@
-#![feature(binary_heap_retain)]
 #![feature(int_roundings)]
 
 use std::{collections::HashMap, io::Write, time::Instant};
@@ -14,6 +13,7 @@ mod y2019;
 mod y2020;
 mod y2021;
 mod y2022;
+mod y2023;
 
 type RunnableClosure = Box<dyn Fn(&str) -> (String, String)>;
 
@@ -328,5 +328,30 @@ fn initialize_runners() -> HashMap<(u32, u32), RunnableClosure> {
     runners.insert((2022, 23), run_day!(y2022, day23));
     runners.insert((2022, 24), run_day!(y2022, day24));
     runners.insert((2022, 25), run_day!(y2022, day25));
+    runners.insert((2023, 1), run_day!(y2023, day1));
+    runners.insert((2023, 2), run_day!(y2023, day2));
+    // runners.insert((2023, 3), run_day!(y2023, day3));
+    // runners.insert((2023, 4), run_day!(y2023, day4));
+    // runners.insert((2023, 5), run_day!(y2023, day5));
+    // runners.insert((2023, 6), run_day!(y2023, day6));
+    // runners.insert((2023, 7), run_day!(y2023, day7));
+    // runners.insert((2023, 8), run_day!(y2023, day8));
+    // runners.insert((2023, 9), run_day!(y2023, day9));
+    // runners.insert((2023, 10), run_day!(y2023, day10));
+    // runners.insert((2023, 11), run_day!(y2023, day11));
+    // runners.insert((2023, 12), run_day!(y2023, day12));
+    // runners.insert((2023, 13), run_day!(y2023, day13));
+    // runners.insert((2023, 14), run_day!(y2023, day14));
+    // runners.insert((2023, 15), run_day!(y2023, day15));
+    // runners.insert((2023, 16), run_day!(y2023, day16));
+    // runners.insert((2023, 17), run_day!(y2023, day17));
+    // runners.insert((2023, 18), run_day!(y2023, day18));
+    // runners.insert((2023, 19), run_day!(y2023, day19));
+    // runners.insert((2023, 20), run_day!(y2023, day20));
+    // runners.insert((2023, 21), run_day!(y2023, day21));
+    // runners.insert((2023, 22), run_day!(y2023, day22));
+    // runners.insert((2023, 23), run_day!(y2023, day23));
+    // runners.insert((2023, 24), run_day!(y2023, day24));
+    // runners.insert((2023, 25), run_day!(y2023, day25));
     runners
 }
