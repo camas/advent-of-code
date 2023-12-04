@@ -3,10 +3,10 @@ mod md5;
 mod vector2;
 mod vector3;
 
-pub use math::*;
-pub use md5::*;
-pub use vector2::*;
-pub use vector3::*;
+pub(crate) use math::*;
+pub(crate) use md5::*;
+pub(crate) use vector2::*;
+pub(crate) use vector3::*;
 
 /// Parses the block letters that AoC likes to output
 ///

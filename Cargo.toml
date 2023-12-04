@@ -1,28 +1,22 @@
 [package]
 name = "advent-of-code"
 version = "0.1.0"
-authors = ["camas <camas@users.noreply.github.com>"]
 edition = "2021"
 
+[workspace]
+members = ["macros"]
+
 [dependencies]
-# Logging
+macros = { path = "macros" }
 log = "*"
 flexi_logger = "*"
-# HTTP requests
 ureq = "*"
-# Parallel iteration
 rayon = "*"
-# Various iter helpers
 itertools = "*"
-# Json deserialization
 serde_json = "*"
-# Date/Time
 chrono = "*"
-# Number helpers
 num = "*"
-# SMT solver
 z3 = "*"
-# Parsing
 nom = "*"
-# Fractions
 num-rational = "*"
+anyhow = "*"

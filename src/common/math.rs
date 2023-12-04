@@ -2,7 +2,7 @@ use std::iter::Product;
 
 use num::Integer;
 
-pub fn chinese_remainder<T: Integer + Copy + Product>(a: &[T], m: &[T]) -> Option<T> {
+pub(crate) fn chinese_remainder<T: Integer + Copy + Product>(a: &[T], m: &[T]) -> Option<T> {
     let big_n = m.iter().copied().product::<T>();
     a.iter()
         .zip(m.iter())
@@ -14,7 +14,7 @@ pub fn chinese_remainder<T: Integer + Copy + Product>(a: &[T], m: &[T]) -> Optio
 }
 
 #[allow(clippy::many_single_char_names)]
-pub fn egcd<T: Integer + Copy>(a: T, b: T) -> (T, T, T) {
+pub(crate) fn egcd<T: Integer + Copy>(a: T, b: T) -> (T, T, T) {
     if a == T::zero() {
         (b, T::zero(), T::one())
     } else {
@@ -23,7 +23,7 @@ pub fn egcd<T: Integer + Copy>(a: T, b: T) -> (T, T, T) {
     }
 }
 
-pub fn mod_inv<T: Integer + Copy>(a: T, m: T) -> Option<T> {
+pub(crate) fn mod_inv<T: Integer + Copy>(a: T, m: T) -> Option<T> {
     let (g, x, _) = egcd(a, m);
     if g == T::one() {
         Some((x % m + m) % m)
