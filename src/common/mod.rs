@@ -8,6 +8,45 @@ pub(crate) use md5::*;
 pub(crate) use vector2::*;
 pub(crate) use vector3::*;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum Direction {
+    North,
+    East,
+    South,
+    West,
+}
+
+impl Direction {
+    pub(crate) fn invert(&self) -> Direction {
+        match self {
+            Direction::North => Direction::South,
+            Direction::East => Direction::West,
+            Direction::South => Direction::North,
+            Direction::West => Direction::East,
+        }
+    }
+
+    pub(crate) fn as_vector2(&self) -> Vector2 {
+        match self {
+            Direction::North => Vector2::new(0, -1),
+            Direction::East => Vector2::new(1, 0),
+            Direction::South => Vector2::new(0, 1),
+            Direction::West => Vector2::new(-1, 0),
+        }
+    }
+
+    pub(crate) fn iter() -> impl Iterator<Item = Direction> {
+        [
+            Direction::North,
+            Direction::East,
+            Direction::South,
+            Direction::West,
+        ]
+        .iter()
+        .cloned()
+    }
+}
+
 /// Parses the block letters that AoC likes to output
 ///
 /// Could just print it but this lets it fit in a single line
@@ -19,7 +58,7 @@ pub fn parse_letters(dots: &[Vec<bool>]) -> String {
     }
 
     let mut letters = String::new();
-    // Each letter is 4 wide followed by an empty line
+    // Each letter is 4 wide followed by a space
     for i in 0..(dots_len / 5) {
         // Hash each letter for easier lookup
         // Each dot just a bit in the hash, so no data lost
