@@ -8,7 +8,7 @@ pub(crate) use md5::*;
 pub(crate) use vector2::*;
 pub(crate) use vector3::*;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub(crate) enum Direction {
     North,
     East,
