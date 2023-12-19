@@ -45,6 +45,24 @@ impl Direction {
         .iter()
         .cloned()
     }
+
+    pub(crate) fn left(&self) -> Direction {
+        match self {
+            Direction::North => Direction::West,
+            Direction::East => Direction::North,
+            Direction::South => Direction::East,
+            Direction::West => Direction::South,
+        }
+    }
+
+    pub(crate) fn right(&self) -> Direction {
+        match self {
+            Direction::North => Direction::East,
+            Direction::East => Direction::South,
+            Direction::South => Direction::West,
+            Direction::West => Direction::North,
+        }
+    }
 }
 
 /// Parses the block letters that AoC likes to output

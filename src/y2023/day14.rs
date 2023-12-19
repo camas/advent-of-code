@@ -228,7 +228,7 @@ impl FromStr for Map {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use super::*;
 
     #[test]

@@ -1,4 +1,4 @@
-use std::ops::{Add, AddAssign, Sub};
+use std::ops::{Add, AddAssign, Mul, Sub};
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Vector2 {
@@ -98,5 +98,13 @@ impl AddAssign for Vector2 {
     fn add_assign(&mut self, rhs: Self) {
         self.x += rhs.x;
         self.y += rhs.y;
+    }
+}
+
+impl Mul<Vector2> for i64 {
+    type Output = Vector2;
+
+    fn mul(self, rhs: Vector2) -> Self::Output {
+        Vector2::new(rhs.x * self, rhs.y * self)
     }
 }
