@@ -105,7 +105,7 @@ struct State {
 
 impl PartialEq for State {
     fn eq(&self, other: &Self) -> bool {
-        (self.curr_risk).eq(&(other.curr_risk))
+        self.curr_risk == other.curr_risk
     }
 }
 

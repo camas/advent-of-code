@@ -17,7 +17,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         .inputs
         .iter()
         .map(|input| (*input, None))
-        .collect();
+        .collect::<Vec<_>>();
 
     for step in 1..=1000 {
         network.press_button(step, &mut check_modules);
@@ -77,7 +77,7 @@ enum Pulse {
 }
 
 impl Network {
-    fn press_button(&mut self, step: usize, check_modules: &mut Vec<(ModuleIndex, Option<usize>)>) {
+    fn press_button(&mut self, step: usize, check_modules: &mut [(ModuleIndex, Option<usize>)]) {
         let mut pulse_queue = VecDeque::new();
         pulse_queue.push_front((self.broadcaster_index, self.broadcaster_index, Pulse::Low));
         while let Some((source, destination, pulse)) = pulse_queue.pop_front() {
@@ -157,11 +157,11 @@ impl FromStr for Network {
         let mut partials = Vec::new();
         for line in s.lines() {
             let (name, outputs) = line.split_once(" -> ").unwrap();
-            let (name, module_type) = if name.starts_with('%') {
-                (&name[1..], ModuleType::FlipFlop { on: false })
-            } else if name.starts_with('&') {
+            let (name, module_type) = if let Some(name_stripped) = name.strip_prefix('%') {
+                (name_stripped, ModuleType::FlipFlop { on: false })
+            } else if let Some(name_stripped) = name.strip_prefix('&') {
                 (
-                    &name[1..],
+                    name_stripped,
                     ModuleType::Conjunction {
                         last_pulses: Vec::new(),
                     },

@@ -9,8 +9,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
 
     let mut boxes: HashMap<u8, Vec<(String, u8)>> = HashMap::new();
     for instruction in input.lines().flat_map(|line| line.split(',')) {
-        if instruction.ends_with('-') {
-            let key = &instruction[..(instruction.len() - 1)];
+        if let Some(key) = instruction.strip_suffix('-') {
             let box_ = boxes.entry(hash(key)).or_default();
             box_.retain(|(lens_key, _)| lens_key != key);
         } else {

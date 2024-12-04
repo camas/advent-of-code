@@ -320,7 +320,7 @@ impl State {
 
 impl PartialEq for State {
     fn eq(&self, other: &Self) -> bool {
-        (self.h + self.energy_used).eq(&(other.h + other.energy_used))
+        self.h + self.energy_used == other.h + other.energy_used
     }
 }
 
