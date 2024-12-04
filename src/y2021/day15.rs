@@ -67,7 +67,7 @@ fn search(levels: Vec<Vec<i64>>) -> i64 {
     };
     let mut queue = BinaryHeap::new();
     queue.push(initial_state);
-    let mut point_bests = vec![vec![i64::max_value(); width as usize]; height as usize];
+    let mut point_bests = vec![vec![i64::MAX; width as usize]; height as usize];
     loop {
         let curr = queue.pop().unwrap();
         if curr.position == end_point {

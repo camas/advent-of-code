@@ -18,11 +18,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
                         parts.next().unwrap();
                     }
                     let name = parts.next().unwrap();
-                    let item = match parts
-                        .next()
-                        .unwrap()
-                        .trim_end_matches(|c| c == '.' || c == ',')
-                    {
+                    let item = match parts.next().unwrap().trim_end_matches(['.', ',']) {
                         "generator" => RawObject::Generator(name.to_string()),
                         "microchip" => {
                             RawObject::Microchip(name.trim_end_matches("-compatible").to_string())

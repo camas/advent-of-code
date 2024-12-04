@@ -35,7 +35,7 @@ impl Add for Vector2 {
     }
 }
 
-impl<'a> Add for &'a Vector2 {
+impl Add for &Vector2 {
     type Output = Vector2;
 
     fn add(self, rhs: Self) -> Self::Output {
@@ -51,7 +51,7 @@ impl<'a> Add<&'a Vector2> for Vector2 {
     }
 }
 
-impl<'a> Add<Vector2> for &'a Vector2 {
+impl Add<Vector2> for &Vector2 {
     type Output = Vector2;
 
     fn add(self, rhs: Vector2) -> Self::Output {
@@ -70,7 +70,7 @@ impl Sub for Vector2 {
     }
 }
 
-impl<'a> Sub for &'a Vector2 {
+impl Sub for &Vector2 {
     type Output = Vector2;
 
     fn sub(self, rhs: Self) -> Self::Output {
@@ -86,7 +86,7 @@ impl<'a> Sub<&'a Vector2> for Vector2 {
     }
 }
 
-impl<'a> Sub<Vector2> for &'a Vector2 {
+impl Sub<Vector2> for &Vector2 {
     type Output = Vector2;
 
     fn sub(self, rhs: Vector2) -> Self::Output {

@@ -85,7 +85,7 @@ impl Board {
         }
         // Columns
         for x in 0..BOARD_SIZE {
-            if self.picked.iter().map(|row| row[x]).all(|v| v) {
+            if self.picked.iter().all(|row| row[x]) {
                 return true;
             }
         }

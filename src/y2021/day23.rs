@@ -226,8 +226,7 @@ impl State {
                             continue;
                         }
                         // Add room move
-                        let moves = (x as i64 - test_x as i64).abs() as usize
-                            + (self.room_size - room.len());
+                        let moves = x.abs_diff(test_x) + self.room_size - room.len();
                         let mut rooms = self.rooms.clone();
                         rooms[room_index].push(*a);
                         let mut hallway = self.hallway.clone();
