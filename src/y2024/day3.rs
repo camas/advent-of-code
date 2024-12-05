@@ -70,7 +70,7 @@ fn parse_instructions(input: &str) -> Vec<Instruction> {
         )),
     )
     .map(|instructions: Vec<Option<Instruction>>| instructions.into_iter().flatten().collect())
-    .parse(&input)
+    .parse(input)
     .unwrap()
 }
 
