@@ -5,8 +5,7 @@ use nom::{
     character::complete::{alpha1, digit1},
     combinator::{all_consuming, map},
     multi::separated_list1,
-    sequence::tuple,
-    IResult,
+    IResult, Parser,
 };
 
 struct Game {
@@ -66,15 +65,15 @@ impl FromStr for Game {
 
 fn parse_game(input: &str) -> IResult<&str, Game> {
     all_consuming(map(
-        tuple((
+        (
             tag("Game "),
             digit1::<&str, _>,
             tag(": "),
             separated_list1(
                 tag("; "),
-                separated_list1(tag(", "), tuple((digit1, tag(" "), alpha1))),
+                separated_list1(tag(", "), (digit1, tag(" "), alpha1)),
             ),
-        )),
+        ),
         |(_, id, _, subsets)| Game {
             id: id.parse().unwrap(),
             subsets: subsets
@@ -96,5 +95,6 @@ fn parse_game(input: &str) -> IResult<&str, Game> {
                 })
                 .collect(),
         },
-    ))(input)
+    ))
+    .parse(input)
 }

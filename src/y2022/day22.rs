@@ -2,10 +2,10 @@ use std::str::FromStr;
 
 use nom::{
     branch::alt,
-    character::{complete::char, complete::digit1},
+    character::complete::{char, digit1},
     combinator::map,
     multi::many1,
-    IResult,
+    IResult, Parser,
 };
 
 use crate::common::{Vector2, Vector3};
@@ -233,7 +233,7 @@ impl Map {
 
     fn cube_face_size(&self) -> usize {
         for size in (1..=100).rev() {
-            if self.width() % size != 0 || self.height() % size != 0 {
+            if !self.width().is_multiple_of(size) || !self.height().is_multiple_of(size) {
                 continue;
             }
             let chunk_row_count = self.width() / size;
@@ -657,7 +657,7 @@ impl FromStr for Input {
             .iter_mut()
             .for_each(|row| row.resize_with(width, || Tile::Empty));
 
-        let moves = many1(parse_move)(b.trim()).unwrap().1;
+        let moves = many1(parse_move).parse(b.trim()).unwrap().1;
 
         Ok(Input {
             map: Map { tiles },
@@ -671,7 +671,8 @@ fn parse_move(s: &str) -> IResult<&str, Move> {
         map(char('L'), |_| Move::Left),
         map(char('R'), |_| Move::Right),
         map(digit1, |s: &str| Move::Forward(s.parse().unwrap())),
-    ))(s)
+    ))
+    .parse(s)
 }
 
 #[cfg(test)]

@@ -116,8 +116,8 @@ fn download_input(input_path: &Path, solution: &Solution, session_key: &str) -> 
         "https://adventofcode.com/{}/day/{}/input",
         solution.year, solution.day
     );
-    let input_response = ureq::get(&input_url)
-        .set("Cookie", &format!("session={}", session_key))
+    let mut input_response = ureq::get(&input_url)
+        .header("Cookie", &format!("session={}", session_key))
         .call()
         .context("Error getting day input")?;
     if input_response.status() != 200 {
@@ -125,7 +125,8 @@ fn download_input(input_path: &Path, solution: &Solution, session_key: &str) -> 
     }
 
     let input = input_response
-        .into_string()
+        .body_mut()
+        .read_to_string()
         .context("Error reading response text")?;
 
     std::fs::create_dir_all(input_path.parent().context("Error getting parent dir")?)

@@ -47,7 +47,7 @@ impl ComputerState {
             Instruction::Increment(r) => *self.get_register(r) += 1,
             Instruction::Jump(offset) => self.instruction_pointer += offset,
             Instruction::JumpIfEven(r, offset) => {
-                if *self.get_register(r) % 2 == 0 {
+                if (*self.get_register(r)).is_multiple_of(2) {
                     self.instruction_pointer += offset;
                 } else {
                     self.instruction_pointer += 1;

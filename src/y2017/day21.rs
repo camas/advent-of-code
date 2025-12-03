@@ -55,7 +55,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
 }
 
 fn step(grid: Vec<Vec<bool>>, transforms: &HashMap<Pattern, Pattern>) -> Vec<Vec<bool>> {
-    if grid.len() % 2 == 0 {
+    if grid.len().is_multiple_of(2) {
         let blocks = (0..grid.len())
             .step_by(2)
             .map(|y| {

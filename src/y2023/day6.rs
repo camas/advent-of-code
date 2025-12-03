@@ -3,8 +3,7 @@ use nom::{
     character::complete::digit1,
     combinator::{all_consuming, map},
     multi::{many0, many1, separated_list1},
-    sequence::tuple,
-    IResult,
+    IResult, Parser,
 };
 use num::integer::Roots;
 
@@ -50,7 +49,7 @@ fn solve_quadratic(a: i64, b: i64, c: i64) -> (i64, i64) {
 
 fn parse_races(input: &str) -> IResult<&str, Vec<Race>> {
     all_consuming(map(
-        tuple((
+        (
             tag("Time:"),
             many1(tag(" ")),
             parse_numbers,
@@ -58,7 +57,7 @@ fn parse_races(input: &str) -> IResult<&str, Vec<Race>> {
             many1(tag(" ")),
             parse_numbers,
             many0(tag("\n")),
-        )),
+        ),
         |(_, _, times, _, _, distances, _)| {
             times
                 .into_iter()
@@ -66,7 +65,8 @@ fn parse_races(input: &str) -> IResult<&str, Vec<Race>> {
                 .map(|(time, distance)| Race { time, distance })
                 .collect::<Vec<_>>()
         },
-    ))(input)
+    ))
+    .parse(input)
 }
 
 fn parse_numbers(input: &str) -> IResult<&str, Vec<i64>> {
@@ -78,12 +78,13 @@ fn parse_numbers(input: &str) -> IResult<&str, Vec<i64>> {
                 .map(|number| number.parse::<i64>().unwrap())
                 .collect()
         },
-    )(input)
+    )
+    .parse(input)
 }
 
 fn parse_kerning_issue_race(input: &str) -> IResult<&str, Race> {
     all_consuming(map(
-        tuple((
+        (
             tag("Time:"),
             many0(tag(" ")),
             separated_list1(many1(tag(" ")), digit1::<&str, _>),
@@ -91,12 +92,13 @@ fn parse_kerning_issue_race(input: &str) -> IResult<&str, Race> {
             many0(tag(" ")),
             separated_list1(many1(tag(" ")), digit1),
             many0(tag("\n")),
-        )),
+        ),
         |(_, _, time, _, _, distance, _)| Race {
             time: time.concat().parse::<i64>().unwrap(),
             distance: distance.concat().parse::<i64>().unwrap(),
         },
-    ))(input)
+    ))
+    .parse(input)
 }
 
 #[cfg(test)]

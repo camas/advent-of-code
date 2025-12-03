@@ -5,8 +5,7 @@ use nom::{
     character::complete::{alpha1, digit1},
     combinator::{all_consuming, map},
     multi::{many0, separated_list1},
-    sequence::tuple,
-    IResult,
+    IResult, Parser,
 };
 
 pub fn solve(input: &str) -> (impl ToString, impl ToString) {
@@ -115,40 +114,39 @@ fn intersect(input: Range<i64>, against: Range<i64>) -> Option<(Range<i64>, Vec<
 
 fn parse_almanac(input: &str) -> IResult<&str, Almanac> {
     all_consuming(map(
-        tuple((
+        (
             parse_seeds,
             tag("\n\n"),
             separated_list1(tag("\n\n"), parse_map),
             many0(tag("\n")),
-        )),
+        ),
         |(seeds, _, maps, _)| Almanac { seeds, maps },
-    ))(input)
+    ))
+    .parse(input)
 }
 
 fn parse_seeds(input: &str) -> IResult<&str, Vec<i64>> {
     map(
-        tuple((tag("seeds: "), separated_list1(tag(" "), digit1))),
+        (tag("seeds: "), separated_list1(tag(" "), digit1)),
         |(_, digit_list)| {
             digit_list
                 .into_iter()
                 .map(|digits: &str| digits.parse::<i64>().unwrap())
                 .collect::<Vec<_>>()
         },
-    )(input)
+    )
+    .parse(input)
 }
 
 fn parse_map(input: &str) -> IResult<&str, AlmanacMap> {
     map(
-        tuple((
+        (
             alpha1::<&str, _>,
             tag("-to-"),
             alpha1,
             tag(" map:\n"),
-            separated_list1(
-                tag("\n"),
-                tuple((digit1, tag(" "), digit1, tag(" "), digit1)),
-            ),
-        )),
+            separated_list1(tag("\n"), (digit1, tag(" "), digit1, tag(" "), digit1)),
+        ),
         |(source_name, _, destination_name, _, entries)| AlmanacMap {
             _source_name: source_name.to_string(),
             _destination_name: destination_name.to_string(),
@@ -163,7 +161,8 @@ fn parse_map(input: &str) -> IResult<&str, AlmanacMap> {
                 )
                 .collect(),
         },
-    )(input)
+    )
+    .parse(input)
 }
 
 #[cfg(test)]

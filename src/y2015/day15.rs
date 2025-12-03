@@ -47,7 +47,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
         let ingredient = &ingredients[index as usize];
         if index == ingredients_len - 1 {
             let last_calories = 500 - current_calories;
-            if last_calories % ingredient.calories as u32 != 0 {
+            if !last_calories.is_multiple_of(ingredient.calories as u32) {
                 i32::MIN
             } else {
                 amounts.push(last_calories / ingredient.calories as u32);

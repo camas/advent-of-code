@@ -6,7 +6,7 @@ use nom::{
     combinator::{map, map_res, opt, recognize},
     multi::{many1, separated_list0},
     sequence::{delimited, preceded, separated_pair},
-    IResult,
+    IResult, Parser,
 };
 
 pub fn solve(input: &str) -> (impl ToString, impl ToString) {
@@ -220,14 +220,14 @@ impl Resource {
 }
 
 fn parse_blueprint(s: &str) -> IResult<&str, Blueprint> {
-    let (s, id) = preceded(tag("Blueprint "), parse_i64)(s)?;
-    let (s, recipes) = preceded(tag(": "), many1(parse_recipe))(s)?;
+    let (s, id) = preceded(tag("Blueprint "), parse_i64).parse(s)?;
+    let (s, recipes) = preceded(tag(": "), many1(parse_recipe)).parse(s)?;
 
     Ok((s, Blueprint { id, recipes }))
 }
 
 fn parse_recipe(s: &str) -> IResult<&str, Recipe> {
-    let (s, output) = preceded(preceded(opt(tag(" ")), tag("Each ")), parse_resource)(s)?;
+    let (s, output) = preceded(preceded(opt(tag(" ")), tag("Each ")), parse_resource).parse(s)?;
     let (s, inputs) = delimited(
         tag(" robot costs "),
         separated_list0(
@@ -235,7 +235,8 @@ fn parse_recipe(s: &str) -> IResult<&str, Recipe> {
             separated_pair(parse_i64, tag(" "), parse_resource),
         ),
         tag("."),
-    )(s)?;
+    )
+    .parse(s)?;
 
     let inputs = inputs.into_iter().map(|(a, b)| (b, a)).collect();
 
@@ -249,11 +250,12 @@ fn parse_resource(s: &str) -> IResult<&str, Resource> {
         "obsidian" => Resource::Obsidian,
         "geode" => Resource::Geode,
         _ => unreachable!(),
-    })(s)
+    })
+    .parse(s)
 }
 
 fn parse_i64(s: &str) -> IResult<&str, i64> {
-    map_res(recognize(preceded(opt(tag("-")), digit1)), i64::from_str)(s)
+    map_res(recognize(preceded(opt(tag("-")), digit1)), i64::from_str).parse(s)
 }
 
 #[cfg(test)]

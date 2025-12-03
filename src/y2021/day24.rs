@@ -1,22 +1,15 @@
-use z3::{
-    ast::{Ast, BV},
-    Config, Context, Optimize,
-};
+use z3::{ast::BV, Optimize};
 
 pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     let instructions = input.lines().map(Instruction::from_str).collect::<Vec<_>>();
 
     // Setup Z3 and variables
-    let config = Config::new();
-    let ctx = Context::new(&config);
-    let optimize = Optimize::new(&ctx);
+    let optimize = Optimize::new();
     const SZ: u32 = 64;
     const INP_SZ: u32 = 8;
-    let mut vars = (0..4)
-        .map(|_| BV::from_u64(&ctx, 0, SZ))
-        .collect::<Vec<_>>();
+    let mut vars = (0..4).map(|_| BV::from_u64(0, SZ)).collect::<Vec<_>>();
     let input = (0..14)
-        .map(|i| BV::new_const(&ctx, format!("input{}", i), INP_SZ))
+        .map(|i| BV::new_const(format!("input{}", i), INP_SZ))
         .collect::<Vec<_>>();
     let mut input_index = 0;
 
@@ -29,7 +22,7 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
     macro_rules! value {
         ($var:expr) => {
             match $var {
-                Value::Literal(v) => BV::from_i64(&ctx, *v, SZ),
+                Value::Literal(v) => BV::from_i64(*v, SZ),
                 Value::Variable(v) => vars[*v as usize].clone(),
             }
         };
@@ -54,25 +47,25 @@ pub fn solve(input: &str) -> (impl ToString, impl ToString) {
             }
             Instruction::Equal(a, b) => {
                 vars[*a as usize] = var!(a)
-                    ._eq(&value!(b))
-                    .ite(&BV::from_u64(&ctx, 1, SZ), &BV::from_u64(&ctx, 0, SZ));
+                    .eq(&value!(b))
+                    .ite(&BV::from_u64(1, SZ), &BV::from_u64(0, SZ));
             }
         }
     }
 
     // Assert input within range
     for inp in input.iter() {
-        optimize.assert(&inp.bvule(&BV::from_u64(&ctx, 9, INP_SZ)));
-        optimize.assert(&inp.bvuge(&BV::from_u64(&ctx, 1, INP_SZ)));
+        optimize.assert(&inp.bvule(BV::from_u64(9, INP_SZ)));
+        optimize.assert(&inp.bvuge(BV::from_u64(1, INP_SZ)));
     }
 
     // Assert final Z register is zero
-    optimize.assert(&vars[Variable::Z as usize]._eq(&BV::from_u64(&ctx, 0, SZ)));
+    optimize.assert(&vars[Variable::Z as usize].eq(BV::from_u64(0, SZ)));
 
     // Solve for maximum input value
-    let mut input_value = BV::from_u64(&ctx, 0, SZ);
+    let mut input_value = BV::from_u64(0, SZ);
     for inp in input.iter() {
-        input_value *= BV::from_u64(&ctx, 10, SZ);
+        input_value *= BV::from_u64(10, SZ);
         input_value += inp.zero_ext(SZ - INP_SZ);
     }
     optimize.push();

@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use num::Integer;
 use winnow::{
     ascii::{alphanumeric1, multispace0},
-    combinator::{fail, repeat, separated, success},
+    combinator::{empty, fail, repeat, separated},
     prelude::*,
 };
 use winnow::{dispatch, token::any};
@@ -106,7 +106,7 @@ impl Map {
         Map { nodes, zzz_index }
     }
 
-    fn root(&self) -> MapPosition {
+    fn root<'a>(&'a self) -> MapPosition<'a> {
         MapPosition {
             index: self
                 .nodes
@@ -118,7 +118,7 @@ impl Map {
         }
     }
 
-    fn all_roots(&self) -> Vec<MapPosition> {
+    fn all_roots<'a>(&'a self) -> Vec<MapPosition<'a>> {
         self.nodes
             .iter()
             .filter(|node| node.name.ends_with('A'))
@@ -173,19 +173,19 @@ fn parse_input(input: &str) -> (Vec<Instruction>, Map) {
         .unwrap()
 }
 
-fn parse_instructions(input: &mut &str) -> PResult<Vec<Instruction>> {
+fn parse_instructions(input: &mut &str) -> winnow::Result<Vec<Instruction>> {
     repeat(
         1..,
         dispatch! {any;
-            'R' => success(Instruction::Right),
-            'L' => success(Instruction::Left),
+            'R' => empty.value(Instruction::Right),
+            'L' => empty.value(Instruction::Left),
             _ => fail,
         },
     )
     .parse_next(input)
 }
 
-fn parse_node(input: &mut &str) -> PResult<(String, String, String)> {
+fn parse_node(input: &mut &str) -> winnow::Result<(String, String, String)> {
     (
         alphanumeric1::<&str, _>,
         " = (",

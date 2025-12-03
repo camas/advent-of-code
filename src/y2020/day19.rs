@@ -64,8 +64,7 @@ enum ChildType {
 impl Rule {
     fn matches(&self, message: &str, rules: &HashMap<usize, Rule>) -> bool {
         self.inner_matches(&message.chars().collect::<Vec<_>>(), 0, rules)
-            .iter()
-            .any(|m| *m == message.len())
+            .contains(&message.len())
     }
 
     fn inner_matches(

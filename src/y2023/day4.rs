@@ -3,8 +3,7 @@ use nom::{
     character::complete::{digit1, multispace1},
     combinator::{all_consuming, map},
     multi::separated_list1,
-    sequence::tuple,
-    IResult,
+    IResult, Parser,
 };
 
 pub fn solve(input: &str) -> (impl ToString, impl ToString) {
@@ -57,7 +56,7 @@ struct Card {
 
 fn parse_card(input: &str) -> IResult<&str, Card> {
     all_consuming(map(
-        tuple((
+        (
             tag("Card"),
             multispace1,
             digit1,
@@ -67,12 +66,13 @@ fn parse_card(input: &str) -> IResult<&str, Card> {
             tag(" |"),
             multispace1,
             parse_numbers,
-        )),
+        ),
         |(_, _, _, _, _, winning_numbers, _, _, picked_numbers)| Card {
             winning_numbers,
             picked_numbers,
         },
-    ))(input)
+    ))
+    .parse(input)
 }
 
 fn parse_numbers(input: &str) -> IResult<&str, Vec<u32>> {
@@ -80,5 +80,6 @@ fn parse_numbers(input: &str) -> IResult<&str, Vec<u32>> {
         a.into_iter()
             .map(|b: &str| b.parse::<u32>().unwrap())
             .collect::<Vec<_>>()
-    })(input)
+    })
+    .parse(input)
 }

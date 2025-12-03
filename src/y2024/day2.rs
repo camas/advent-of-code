@@ -1,4 +1,4 @@
-use winnow::{ascii::multispace0, combinator::separated, PResult, Parser};
+use winnow::{ascii::multispace0, combinator::separated, Parser};
 
 use crate::common::parse_u32;
 
@@ -38,7 +38,7 @@ struct Report {
 }
 
 impl Report {
-    fn parse(input: &mut &str) -> PResult<Report> {
+    fn parse(input: &mut &str) -> winnow::Result<Report> {
         separated(1.., parse_u32, " ")
             .map(|levels| Report { levels })
             .parse_next(input)

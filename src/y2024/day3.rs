@@ -1,7 +1,7 @@
 use winnow::{
     combinator::{alt, repeat},
     token::any,
-    PResult, Parser,
+    Parser,
 };
 
 use crate::common::parse_u32;
@@ -44,17 +44,17 @@ enum Instruction {
 }
 
 impl Instruction {
-    fn parse_mul(input: &mut &str) -> PResult<Self> {
+    fn parse_mul(input: &mut &str) -> winnow::Result<Self> {
         ("mul(", parse_u32, ",", parse_u32, ")")
             .map(|(_, left, _, right, _)| Self::Mul { left, right })
             .parse_next(input)
     }
 
-    fn parse_do(input: &mut &str) -> PResult<Self> {
+    fn parse_do(input: &mut &str) -> winnow::Result<Self> {
         "do()".map(|_| Instruction::Do).parse_next(input)
     }
 
-    fn parse_dont(input: &mut &str) -> PResult<Self> {
+    fn parse_dont(input: &mut &str) -> winnow::Result<Self> {
         "don't()".map(|_| Instruction::Dont).parse_next(input)
     }
 }

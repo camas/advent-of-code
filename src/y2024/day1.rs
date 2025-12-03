@@ -2,7 +2,7 @@ use itertools::Itertools;
 use winnow::{
     ascii::{digit1, multispace0, multispace1},
     combinator::separated,
-    PResult, Parser,
+    Parser,
 };
 
 pub fn solve(input: &str) -> (impl ToString, impl ToString) {
@@ -81,13 +81,13 @@ fn parse_input(input: &str) -> Input {
         .unwrap()
 }
 
-fn parse_pair(input: &mut &str) -> PResult<(u32, u32)> {
+fn parse_pair(input: &mut &str) -> winnow::Result<(u32, u32)> {
     (parse_number, multispace1, parse_number)
         .map(|(a, _, b)| (a, b))
         .parse_next(input)
 }
 
-fn parse_number(input: &mut &str) -> PResult<u32> {
+fn parse_number(input: &mut &str) -> winnow::Result<u32> {
     digit1
         .map(|digits: &str| digits.parse::<u32>().unwrap())
         .parse_next(input)

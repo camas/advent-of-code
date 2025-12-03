@@ -3,7 +3,7 @@ use std::{collections::HashMap, ops::Range};
 use winnow::{
     ascii::{alpha1, digit1, multispace0},
     combinator::{alt, separated},
-    PResult, Parser,
+    Parser,
 };
 
 pub fn solve(input: &str) -> (impl ToString, impl ToString) {
@@ -251,7 +251,7 @@ fn parse_input(input: &str) -> (Vec<Workflow>, Vec<PartRating>) {
         .unwrap()
 }
 
-fn parse_workflow(input: &mut &str) -> PResult<Workflow> {
+fn parse_workflow(input: &mut &str) -> winnow::Result<Workflow> {
     (
         alpha1,
         "{",
@@ -268,7 +268,7 @@ fn parse_workflow(input: &mut &str) -> PResult<Workflow> {
         .parse_next(input)
 }
 
-fn parse_rule(input: &mut &str) -> PResult<Rule> {
+fn parse_rule(input: &mut &str) -> winnow::Result<Rule> {
     (
         parse_category,
         parse_operation,
@@ -287,7 +287,7 @@ fn parse_rule(input: &mut &str) -> PResult<Rule> {
         .parse_next(input)
 }
 
-fn parse_destination(input: &mut &str) -> PResult<Destination> {
+fn parse_destination(input: &mut &str) -> winnow::Result<Destination> {
     alt((
         "R".map(|_| Destination::Reject),
         "A".map(|_| Destination::Accept),
@@ -296,7 +296,7 @@ fn parse_destination(input: &mut &str) -> PResult<Destination> {
     .parse_next(input)
 }
 
-fn parse_operation(input: &mut &str) -> PResult<Operation> {
+fn parse_operation(input: &mut &str) -> winnow::Result<Operation> {
     alt((
         ">".map(|_| Operation::GreaterThan),
         "<".map(|_| Operation::LessThan),
@@ -304,7 +304,7 @@ fn parse_operation(input: &mut &str) -> PResult<Operation> {
     .parse_next(input)
 }
 
-fn parse_rating(input: &mut &str) -> PResult<PartRating> {
+fn parse_rating(input: &mut &str) -> winnow::Result<PartRating> {
     (
         "{x=",
         parse_number,
@@ -327,7 +327,7 @@ fn parse_rating(input: &mut &str) -> PResult<PartRating> {
         .parse_next(input)
 }
 
-fn parse_category(input: &mut &str) -> PResult<Category> {
+fn parse_category(input: &mut &str) -> winnow::Result<Category> {
     alt((
         "x".map(|_| Category::ExtremelyCool),
         "m".map(|_| Category::Musical),
@@ -337,7 +337,7 @@ fn parse_category(input: &mut &str) -> PResult<Category> {
     .parse_next(input)
 }
 
-fn parse_number(input: &mut &str) -> PResult<i64> {
+fn parse_number(input: &mut &str) -> winnow::Result<i64> {
     digit1
         .map(|digits: &str| digits.parse::<i64>().unwrap())
         .parse_next(input)

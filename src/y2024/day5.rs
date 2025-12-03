@@ -3,7 +3,7 @@ use std::{
     collections::{HashMap, HashSet},
 };
 
-use winnow::{combinator::separated, PResult, Parser};
+use winnow::{combinator::separated, Parser};
 
 use crate::common::parse_u32;
 
@@ -76,7 +76,7 @@ struct Rule {
 }
 
 impl Rule {
-    fn parse(input: &mut &str) -> PResult<Self> {
+    fn parse(input: &mut &str) -> winnow::Result<Self> {
         (parse_u32, '|', parse_u32)
             .map(|(x, _, y)| Rule { x, y })
             .parse_next(input)
@@ -88,7 +88,7 @@ struct Update {
 }
 
 impl Update {
-    fn parse(input: &mut &str) -> PResult<Self> {
+    fn parse(input: &mut &str) -> winnow::Result<Self> {
         (separated(1.., parse_u32, ','))
             .map(|pages| Update { pages })
             .parse_next(input)
